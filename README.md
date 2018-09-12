@@ -1,5 +1,7 @@
 # Adhan Java
 
+[![Build Status](https://travis-ci.org/batoulapps/adhan-java.svg?branch=master)](https://travis-ci.org/batoulapps/adhan-java)
+
 Adhan Java is written to be compatible with Java and Android devices of all api versions. It compiles against Java 7 to ensure compatibility with Android. It has a small method overhead, and has no external dependencies.
 
 ## Usage
