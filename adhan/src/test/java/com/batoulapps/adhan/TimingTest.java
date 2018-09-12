@@ -22,7 +22,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 public class TimingTest {
 
-  private static final String PATH = "../../Times/";
+  private static final String PATH = "../Shared/Times/";
 
   private JsonAdapter<TimingFile> jsonAdapter;
 
