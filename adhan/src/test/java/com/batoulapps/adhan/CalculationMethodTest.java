@@ -32,11 +32,11 @@ public class CalculationMethodTest {
     assertThat(params.ishaInterval).isEqualTo(90);
     assertThat(params.method).isEqualTo(CalculationMethod.UMM_AL_QURA);
 
-    params = CalculationMethod.GULF.getParameters();
-    assertThat(params.fajrAngle).isWithin(0.000001).of(19.5);
-    assertThat(params.ishaAngle).isWithin(0.000001).of(0);
-    assertThat(params.ishaInterval).isEqualTo(90);
-    assertThat(params.method).isEqualTo(CalculationMethod.GULF);
+    params = CalculationMethod.DUBAI.getParameters();
+    assertThat(params.fajrAngle).isWithin(0.000001).of(18.2);
+    assertThat(params.ishaAngle).isWithin(0.000001).of(18.2);
+    assertThat(params.ishaInterval).isEqualTo(0);
+    assertThat(params.method).isEqualTo(CalculationMethod.DUBAI);
 
     params = CalculationMethod.MOON_SIGHTING_COMMITTEE.getParameters();
     assertThat(params.fajrAngle).isWithin(0.000001).of(18);

@@ -14,6 +14,8 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileFilter;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 import okio.Okio;
@@ -55,19 +57,44 @@ public class TimingTest {
         timingFile.params.latitude, timingFile.params.longitude);
     CalculationParameters parameters = parseParameters(timingFile.params);
 
-    SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
-    formatter.setTimeZone(TimeZone.getTimeZone(timingFile.params.timezone));
-
     for (TimingInfo info : timingFile.times) {
       DateComponents dateComponents = TestUtils.getDateComponents(info.date);
       PrayerTimes prayerTimes = new PrayerTimes(coordinates, dateComponents, parameters);
-      assertThat(formatter.format(prayerTimes.fajr)).isEqualTo(info.fajr);
-      assertThat(formatter.format(prayerTimes.sunrise)).isEqualTo(info.sunrise);
-      assertThat(formatter.format(prayerTimes.dhuhr)).isEqualTo(info.dhuhr);
-      assertThat(formatter.format(prayerTimes.asr)).isEqualTo(info.asr);
-      assertThat(formatter.format(prayerTimes.maghrib)).isEqualTo(info.maghrib);
-      assertThat(formatter.format(prayerTimes.isha)).isEqualTo(info.isha);
+      long fajrDifference = getDifferenceInMinutes(prayerTimes.fajr, info.fajr, timingFile.params.timezone);
+      assertThat(fajrDifference).isAtMost(timingFile.variance);
+      long sunriseDifference = getDifferenceInMinutes(prayerTimes.sunrise, info.sunrise, timingFile.params.timezone);
+      assertThat(sunriseDifference).isAtMost(timingFile.variance);
+      long dhuhrDifference = getDifferenceInMinutes(prayerTimes.dhuhr, info.dhuhr, timingFile.params.timezone);
+      assertThat(dhuhrDifference).isAtMost(timingFile.variance);
+      long asrDifference = getDifferenceInMinutes(prayerTimes.asr, info.asr, timingFile.params.timezone);
+      assertThat(asrDifference).isAtMost(timingFile.variance);
+      long maghribDifference = getDifferenceInMinutes(prayerTimes.maghrib, info.maghrib, timingFile.params.timezone);
+      assertThat(maghribDifference).isAtMost(timingFile.variance);
+      long ishaDifference = getDifferenceInMinutes(prayerTimes.isha, info.isha, timingFile.params.timezone);
+      assertThat(ishaDifference).isAtMost(timingFile.variance);
     }
+  }
+
+  private long getDifferenceInMinutes(Date prayerTime, String jsonTime, String timezone) {
+    SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
+    formatter.setTimeZone(TimeZone.getTimeZone(timezone));
+
+    Date referenceTime;
+    try {
+      final Calendar parsedCalendar = Calendar.getInstance(TimeZone.getTimeZone(timezone));
+      parsedCalendar.setTime(formatter.parse(jsonTime));
+
+      final Calendar referenceCalendar = Calendar.getInstance(TimeZone.getTimeZone(timezone));
+      referenceCalendar.setTime(prayerTime);
+      referenceCalendar.set(Calendar.HOUR, parsedCalendar.get(Calendar.HOUR));
+      referenceCalendar.set(Calendar.MINUTE, parsedCalendar.get(Calendar.MINUTE));
+      referenceCalendar.set(Calendar.AM_PM, parsedCalendar.get(Calendar.AM_PM));
+      referenceTime = referenceCalendar.getTime();
+    } catch (Exception e) {
+      referenceTime = new Date();
+    }
+
+    return Math.abs((prayerTime.getTime() - referenceTime.getTime()) / (60 * 1000));
   }
 
   private CalculationParameters parseParameters(TimingParameters timingParameters) {
@@ -89,8 +116,8 @@ public class TimingTest {
         method = CalculationMethod.UMM_AL_QURA;
         break;
       }
-      case "Gulf": {
-        method = CalculationMethod.GULF;
+      case "Dubai": {
+        method = CalculationMethod.DUBAI;
         break;
       }
       case "MoonsightingCommittee": {

@@ -45,6 +45,11 @@ public class CalculationParameters {
   public PrayerAdjustments adjustments = new PrayerAdjustments();
 
   /**
+   * Used for method adjustments
+   */
+  public PrayerAdjustments methodAdjustments = new PrayerAdjustments();
+
+  /**
    * Generate CalculationParameters from angles
    * @param fajrAngle the angle for calculating fajr
    * @param ishaAngle the angle for calculating isha
@@ -84,6 +89,16 @@ public class CalculationParameters {
   public CalculationParameters(double fajrAngle, int ishaInterval, CalculationMethod method) {
     this(fajrAngle, ishaInterval);
     this.method = method;
+  }
+
+  /**
+   * Set the method adjustments for the current calculation parameters
+   * @param adjustments the prayer adjustments
+   * @return this calculation parameters instance
+   */
+  public CalculationParameters withMethodAdjustments(PrayerAdjustments adjustments) {
+    this.methodAdjustments = adjustments;
+    return this;
   }
 
   static class NightPortions {

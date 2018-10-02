@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 public class PrayerTimes {
   public final Date fajr;
@@ -129,30 +130,6 @@ public class PrayerTimes {
       }
     }
 
-    // method based offsets
-    final int dhuhrOffsetInMinutes;
-    if (parameters.method == CalculationMethod.MOON_SIGHTING_COMMITTEE) {
-      // Moonsighting Committee requires 5 minutes for the sun to pass
-      // the zenith and dhuhr to enter
-      dhuhrOffsetInMinutes = 5;
-    } else if (parameters.method == CalculationMethod.UMM_AL_QURA ||
-               parameters.method == CalculationMethod.GULF ||
-               parameters.method == CalculationMethod.QATAR) {
-      // UmmAlQura and derivatives don't add
-      // anything to zenith for dhuhr
-      dhuhrOffsetInMinutes = 0;
-    } else {
-      dhuhrOffsetInMinutes = 1;
-    }
-
-    final int maghribOffsetInMinutes;
-    if (parameters.method == CalculationMethod.MOON_SIGHTING_COMMITTEE) {
-      // Moonsighting Committee adds 3 minutes to sunset time to account for light refraction
-      maghribOffsetInMinutes = 3;
-    } else {
-      maghribOffsetInMinutes = 0;
-    }
-
     if (error || tempAsr == null) {
       // if we don't have all prayer times then initialization failed
       this.fajr = null;
@@ -163,18 +140,36 @@ public class PrayerTimes {
       this.isha = null;
     } else {
       // Assign final times to public struct members with all offsets
-      this.fajr = CalendarUtil.roundedMinute(CalendarUtil.add(
-          tempFajr, parameters.adjustments.fajr, Calendar.MINUTE));
+      this.fajr = CalendarUtil.roundedMinute(
+          CalendarUtil.add(
+              CalendarUtil.add(tempFajr, parameters.adjustments.fajr, Calendar.MINUTE),
+              parameters.methodAdjustments.fajr,
+              Calendar.MINUTE));
       this.sunrise = CalendarUtil.roundedMinute(
-          CalendarUtil.add(tempSunrise, parameters.adjustments.sunrise, Calendar.MINUTE));
-      this.dhuhr = CalendarUtil.roundedMinute(CalendarUtil.add(
-          tempDhuhr, parameters.adjustments.dhuhr + dhuhrOffsetInMinutes, Calendar.MINUTE));
-      this.asr = CalendarUtil.roundedMinute(CalendarUtil.add(
-          tempAsr, parameters.adjustments.asr, Calendar.MINUTE));
-      this.maghrib = CalendarUtil.roundedMinute(CalendarUtil.add(
-          tempMaghrib, parameters.adjustments.maghrib + maghribOffsetInMinutes, Calendar.MINUTE));
-      this.isha = CalendarUtil.roundedMinute(CalendarUtil.add(
-          tempIsha, parameters.adjustments.isha, Calendar.MINUTE));
+          CalendarUtil.add(
+            CalendarUtil.add(tempSunrise, parameters.adjustments.sunrise, Calendar.MINUTE),
+            parameters.methodAdjustments.sunrise,
+            Calendar.MINUTE));
+      this.dhuhr = CalendarUtil.roundedMinute(
+          CalendarUtil.add(
+            CalendarUtil.add(tempDhuhr, parameters.adjustments.dhuhr, Calendar.MINUTE),
+            parameters.methodAdjustments.dhuhr,
+            Calendar.MINUTE));
+      this.asr = CalendarUtil.roundedMinute(
+          CalendarUtil.add(
+            CalendarUtil.add(tempAsr, parameters.adjustments.asr, Calendar.MINUTE),
+            parameters.methodAdjustments.asr,
+            Calendar.MINUTE));
+      this.maghrib = CalendarUtil.roundedMinute(
+          CalendarUtil.add(
+              CalendarUtil.add(tempMaghrib, parameters.adjustments.maghrib, Calendar.MINUTE),
+              parameters.methodAdjustments.maghrib,
+              Calendar.MINUTE));
+      this.isha = CalendarUtil.roundedMinute(
+          CalendarUtil.add(
+            CalendarUtil.add(tempIsha, parameters.adjustments.isha, Calendar.MINUTE),
+            parameters.methodAdjustments.isha,
+            Calendar.MINUTE));
     }
   }
 
