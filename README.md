@@ -1,6 +1,6 @@
 # Adhan Java
 
-[![Build Status](https://travis-ci.org/batoulapps/adhan-java.svg?branch=master)](https://travis-ci.org/batoulapps/adhan-java)
+[![badge-travis][]][travis] [![badge-cov][]][codecov]
 
 Adhan Java is a well tested and well documented library for calculating Islamic prayer times. Adhan Java is written to be compatible with Java and Android devices of all api versions. It compiles against Java 7 to ensure compatibility with Android. It has a small method overhead, and has no external dependencies.
 
@@ -128,3 +128,8 @@ Qibla qibla = new Qibla(coordinates);
 ## Full Example
 
 See an example in the `samples` module.
+
+[badge-travis]: https://travis-ci.org/batoulapps/adhan-java.svg?branch=master
+[badge-cov]: https://codecov.io/gh/batoulapps/adhan-java/branch/master/graph/badge.svg
+[travis]: https://travis-ci.org/batoulapps/adhan-java
+[codecov]: https://codecov.io/gh/batoulapps/adhan-java
