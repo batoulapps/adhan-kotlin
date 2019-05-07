@@ -7,7 +7,7 @@
     <groupId>com.batoulapps.adhan</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <modules>
         <module>adhan</module>
         <module>samples</module>
@@ -50,7 +50,7 @@
     <distributionManagement>
         <repository>
             <id>adhan-repo-maven</id>
-            <url>https://api.bintray.com/maven/batoulapps/adhan-java/com.batoulapps.adhan/;publish=1</url>
+            <url>https://api.bintray.com/maven/batoulapps/adhan/com.batoulapps.adhan/;publish=1</url>
         </repository>
     </distributionManagement>
     <build>

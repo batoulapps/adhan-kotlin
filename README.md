@@ -13,7 +13,11 @@ Implementations of Adhan in other languages can be found in the parent repo [Adh
 ### Gradle
 
 ```
-compile 'com.batoulapps.adhan:adhan:1.0.0'
+maven {
+   url "https://dl.bintray.com/batoulapps/adhan"
+}
+
+compile 'com.batoulapps.adhan:adhan:1.1.0'
 ```
 
 ### Maven
@@ -22,7 +26,7 @@ compile 'com.batoulapps.adhan:adhan:1.0.0'
 <dependency>
    <groupId>com.batoulapps.adhan</groupId>
    <artifactId>adhan</artifactId>
-   <version>1.0.0</version>
+   <version>1.1.0</version>
 </dependency>
 ```
 
@@ -117,7 +121,7 @@ formatter.format(prayerTimes.fajr);
 
 ### Qibla
 
-As of version 1.0.1, this library provides a `Qibla` class for getting the qibla for a given location.
+As of version 1.1.0, this library provides a `Qibla` class for getting the qibla for a given location.
 
 ```java
 Coordinates coordinates = new Coordinates(latitude, longitude);
