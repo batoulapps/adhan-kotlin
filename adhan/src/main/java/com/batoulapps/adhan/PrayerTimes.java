@@ -19,6 +19,10 @@ public class PrayerTimes {
   public final Date maghrib;
   public final Date isha;
 
+  final Coordinates coordinates;
+  final DateComponents dateComponents;
+  final CalculationParameters calculationParameters;
+
   /**
    * Calculate PrayerTimes
    * @param coordinates the coordinates of the location
@@ -30,6 +34,10 @@ public class PrayerTimes {
   }
 
   private PrayerTimes(Coordinates coordinates, Date date, CalculationParameters parameters) {
+    this.coordinates = coordinates;
+    this.dateComponents = DateComponents.from(date);
+    this.calculationParameters = parameters;
+
     Date tempFajr = null;
     Date tempSunrise = null;
     Date tempDhuhr = null;
@@ -54,7 +62,12 @@ public class PrayerTimes {
     timeComponents = TimeComponents.fromDouble(solarTime.sunset);
     Date sunsetComponents = timeComponents == null ? null : timeComponents.dateComponents(date);
 
-    boolean error = transit == null || sunriseComponents == null || sunsetComponents == null;
+    final Date tomorrow = CalendarUtil.add(date, 1, Calendar.DATE);
+    final SolarTime tomorrowSolarTime = new SolarTime(tomorrow, coordinates);
+    final TimeComponents tomorrowSunriseComponents = TimeComponents.fromDouble(tomorrowSolarTime.sunrise);
+
+    boolean error = transit == null || sunriseComponents == null ||
+            sunsetComponents == null || tomorrowSunriseComponents == null;
     if (!error) {
       tempDhuhr = transit;
       tempSunrise = sunriseComponents;
@@ -67,7 +80,7 @@ public class PrayerTimes {
       }
 
       // get night length
-      Date tomorrowSunrise = CalendarUtil.add(sunriseComponents, 1, Calendar.DAY_OF_YEAR);
+      final Date tomorrowSunrise = tomorrowSunriseComponents.dateComponents(tomorrow);
       long night = tomorrowSunrise.getTime() - sunsetComponents.getTime();
 
       timeComponents = TimeComponents
