@@ -17,7 +17,7 @@ maven {
    url "https://dl.bintray.com/batoulapps/adhan"
 }
 
-compile 'com.batoulapps.adhan:adhan:1.1.0'
+compile 'com.batoulapps.adhan:adhan:1.2.0'
 ```
 
 ### Maven
@@ -26,7 +26,7 @@ compile 'com.batoulapps.adhan:adhan:1.1.0'
 <dependency>
    <groupId>com.batoulapps.adhan</groupId>
    <artifactId>adhan</artifactId>
-   <version>1.1.0</version>
+   <version>1.2.0</version>
 </dependency>
 ```
 
@@ -127,6 +127,16 @@ As of version 1.1.0, this library provides a `Qibla` class for getting the qibla
 Coordinates coordinates = new Coordinates(latitude, longitude);
 Qibla qibla = new Qibla(coordinates);
 // qibla.direction is the qibla direction
+```
+
+### SunnahTimes
+
+In version 1.2.0, the library provides a `SunnahTimes` class.
+
+```java
+SunnahTimes sunnahTimes = new SunnahTimes(prayerTimes);
+// sunnahTimes.middleOfTheNight is the midpoint between Maghrib and Fajr
+// sunnahTimes.lastThirdOfTheNight is the last third between Maghrib and Fajr
 ```
 
 ## Full Example

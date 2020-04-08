@@ -15,3 +15,7 @@
 
 fastlane/report.xml
 fastlane/screenshots
+
+# target directories
+adhan/target
+samples/target
