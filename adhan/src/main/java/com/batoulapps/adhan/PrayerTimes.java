@@ -35,7 +35,7 @@ public class PrayerTimes {
 
   private PrayerTimes(Coordinates coordinates, Date date, CalculationParameters parameters) {
     this.coordinates = coordinates;
-    this.dateComponents = DateComponents.from(date);
+    this.dateComponents = DateComponents.fromUTC(date);
     this.calculationParameters = parameters;
 
     Date tempFajr = null;
