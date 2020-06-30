@@ -1,11 +1,7 @@
 package com.batoulapps.adhan.internal;
 
 import com.batoulapps.adhan.Coordinates;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
+import com.batoulapps.adhan.data.DateComponents;
 
 public class SolarTime {
 
@@ -19,19 +15,12 @@ public class SolarTime {
   private final SolarCoordinates nextSolar;
   private double approximateTransit;
 
-  public SolarTime(Date today, Coordinates coordinates) {
-    Calendar calendar = GregorianCalendar.getInstance(TimeZone.getTimeZone("UTC"));
-    calendar.setTime(today);
+  public SolarTime(DateComponents today, Coordinates coordinates) {
+    final double julianDate = CalendricalHelper.julianDay(today.year, today.month, today.day);
 
-    calendar.add(Calendar.DATE, 1);
-    final Date tomorrow = calendar.getTime();
-
-    calendar.add(Calendar.DATE, -2);
-    final Date yesterday = calendar.getTime();
-
-    this.prevSolar = new SolarCoordinates(CalendricalHelper.julianDay(yesterday));
-    this.solar = new SolarCoordinates(CalendricalHelper.julianDay(today));
-    this.nextSolar = new SolarCoordinates(CalendricalHelper.julianDay(tomorrow));
+    this.prevSolar = new SolarCoordinates(julianDate - 1);
+    this.solar = new SolarCoordinates(julianDate);
+    this.nextSolar = new SolarCoordinates(julianDate + 1);
 
     this.approximateTransit = Astronomical.approximateTransit(coordinates.longitude,
         solar.apparentSiderealTime, solar.rightAscension);

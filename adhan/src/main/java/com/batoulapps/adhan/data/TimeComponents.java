@@ -27,9 +27,11 @@ public class TimeComponents {
     this.seconds = seconds;
   }
 
-  public Date dateComponents(Date date) {
+  public Date dateComponents(DateComponents date) {
     Calendar calendar = GregorianCalendar.getInstance(TimeZone.getTimeZone("UTC"));
-    calendar.setTime(date);
+    calendar.set(Calendar.YEAR, date.year);
+    calendar.set(Calendar.MONTH, date.month - 1);
+    calendar.set(Calendar.DAY_OF_MONTH, date.day);
     calendar.set(Calendar.HOUR_OF_DAY, 0);
     calendar.set(Calendar.MINUTE, minutes);
     calendar.set(Calendar.SECOND, seconds);

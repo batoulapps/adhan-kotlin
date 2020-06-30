@@ -19,7 +19,7 @@ public class SunnahTimes {
         final Date tomorrowPrayerTimesDate = CalendarUtil.add(currentPrayerTimesDate, 1, Calendar.DATE);
         final PrayerTimes tomorrowPrayerTimes =
                 new PrayerTimes(prayerTimes.coordinates,
-                        DateComponents.from(tomorrowPrayerTimesDate),
+                        DateComponents.fromUTC(tomorrowPrayerTimesDate),
                         prayerTimes.calculationParameters);
 
         final int nightDurationInSeconds =

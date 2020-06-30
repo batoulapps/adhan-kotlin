@@ -43,11 +43,11 @@ public class TestUtils {
     return CalendarUtil.add(date, seconds, Calendar.SECOND);
   }
 
-  static Date makeDateWithOffset(int year, int month, int day, int offset, int unit) {
+  static DateComponents makeDateWithOffset(int year, int month, int day, int offset, int unit) {
     Calendar calendar = GregorianCalendar.getInstance(TimeZone.getTimeZone("UTC"));
     //noinspection MagicConstant
     calendar.set(year, month - 1, day);
     calendar.add(unit, offset);
-    return calendar.getTime();
+    return DateComponents.fromUTC(calendar.getTime());
   }
 }
