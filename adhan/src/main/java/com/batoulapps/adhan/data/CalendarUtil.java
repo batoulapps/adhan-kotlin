@@ -41,7 +41,7 @@ public class CalendarUtil {
   }
 
   /**
-   * Add an offset to a particular day
+   * Add the specified amount of a unit of time to a particular date
    * @param when the original date
    * @param amount the amount to add
    * @param field the field to add it to (from {@link java.util.Calendar}'s fields).

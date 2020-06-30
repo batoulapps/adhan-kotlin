@@ -3,6 +3,7 @@ package com.batoulapps.adhan.internal;
 import com.batoulapps.adhan.Coordinates;
 import com.batoulapps.adhan.data.CalendarUtil;
 import com.batoulapps.adhan.data.TimeComponents;
+import com.batoulapps.adhan.data.DateComponents;
 
 import org.junit.Test;
 
@@ -159,7 +160,7 @@ public class AstronomicalTest {
      */
 
     final Coordinates coordinates = new Coordinates(35 + 47.0/60.0, -78 - 39.0/60.0);
-    final SolarTime solar = new SolarTime(TestUtils.makeDate(2015, 7, 12), coordinates);
+    final SolarTime solar = new SolarTime(new DateComponents(2015, 7, 12), coordinates);
 
     final double transit = solar.transit;
     final double sunrise = solar.sunrise;
@@ -190,8 +191,8 @@ public class AstronomicalTest {
     // generated from http://aa.usno.navy.mil/data/docs/RS_OneYear.php for KUKUIHAELE, HAWAII
     final Coordinates coordinates = new Coordinates(
         /* latitude */ 20 + 7.0/60.0, /* longitude */ -155.0 - 34.0/60.0);
-    final SolarTime day1solar = new SolarTime(TestUtils.makeDate(2015, 4, /* day */ 2), coordinates);
-    final SolarTime day2solar = new SolarTime(TestUtils.makeDate(2015, 4, 3), coordinates);
+    final SolarTime day1solar = new SolarTime(new DateComponents(2015, 4, /* day */ 2), coordinates);
+    final SolarTime day2solar = new SolarTime(new DateComponents(2015, 4, 3), coordinates);
 
     final double day1 = day1solar.sunrise;
     final double day2 = day2solar.sunrise;

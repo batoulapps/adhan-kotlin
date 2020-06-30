@@ -27,15 +27,11 @@ public class PrayerTimes {
    * Calculate PrayerTimes
    * @param coordinates the coordinates of the location
    * @param date the date components for that location
-   * @param params the parameters for the calculation
+   * @param parameters the parameters for the calculation
    */
-  public PrayerTimes(Coordinates coordinates, DateComponents date, CalculationParameters params) {
-    this(coordinates, CalendarUtil.resolveTime(date), params);
-  }
-
-  private PrayerTimes(Coordinates coordinates, Date date, CalculationParameters parameters) {
+  public PrayerTimes(Coordinates coordinates, DateComponents date, CalculationParameters parameters) {
     this.coordinates = coordinates;
-    this.dateComponents = DateComponents.fromUTC(date);
+    this.dateComponents = date;
     this.calculationParameters = parameters;
 
     Date tempFajr = null;
@@ -45,11 +41,13 @@ public class PrayerTimes {
     Date tempMaghrib = null;
     Date tempIsha = null;
 
+    final Date prayerDate = CalendarUtil.resolveTime(date);
     Calendar calendar = GregorianCalendar.getInstance(TimeZone.getTimeZone("UTC"));
-    calendar.setTime(date);
-
-    final int year = calendar.get(Calendar.YEAR);
+    calendar.setTime(prayerDate);
     final int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
+
+    final Date tomorrowDate = CalendarUtil.add(prayerDate, 1, Calendar.DATE);
+    final DateComponents tomorrow = DateComponents.fromUTC(tomorrowDate);
 
     SolarTime solarTime = new SolarTime(date, coordinates);
 
@@ -62,7 +60,6 @@ public class PrayerTimes {
     timeComponents = TimeComponents.fromDouble(solarTime.sunset);
     Date sunsetComponents = timeComponents == null ? null : timeComponents.dateComponents(date);
 
-    final Date tomorrow = CalendarUtil.add(date, 1, Calendar.DATE);
     final SolarTime tomorrowSolarTime = new SolarTime(tomorrow, coordinates);
     final TimeComponents tomorrowSunriseComponents = TimeComponents.fromDouble(tomorrowSolarTime.sunrise);
 
@@ -99,7 +96,7 @@ public class PrayerTimes {
 
       final Date safeFajr;
       if (parameters.method == CalculationMethod.MOON_SIGHTING_COMMITTEE) {
-        safeFajr = seasonAdjustedMorningTwilight(coordinates.latitude, dayOfYear, year, sunriseComponents);
+        safeFajr = seasonAdjustedMorningTwilight(coordinates.latitude, dayOfYear, date.year, sunriseComponents);
       } else {
         double portion = nightPortions.fajr;
         long nightFraction = (long) (portion * night / 1000);
@@ -130,7 +127,7 @@ public class PrayerTimes {
         final Date safeIsha;
         if (parameters.method == CalculationMethod.MOON_SIGHTING_COMMITTEE) {
             safeIsha = PrayerTimes.seasonAdjustedEveningTwilight(
-                coordinates.latitude, dayOfYear, year, sunsetComponents);
+                coordinates.latitude, dayOfYear, date.year, sunsetComponents);
         } else {
           double portion = nightPortions.isha;
           long nightFraction = (long) (portion * night / 1000);
