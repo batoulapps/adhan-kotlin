@@ -249,6 +249,10 @@ public class PrayerTimes {
     }
   }
 
+  public Date timeForNextPrayer() {
+    return timeForPrayer(nextPrayer());
+  }
+
   private static Date seasonAdjustedMorningTwilight(
       double latitude, int day, int year, Date sunrise) {
     final double a = 75 + ((28.65 / 55.0) * Math.abs(latitude));
