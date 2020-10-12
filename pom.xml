@@ -21,7 +21,7 @@
         <java.version>1.7</java.version>
 
         <!-- test dependencies -->
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <truth.version>0.27</truth.version>
         <moshi.version>1.9.2</moshi.version>
     </properties>
