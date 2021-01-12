@@ -24,3 +24,9 @@ fastlane/screenshots
 # target directories
 adhan/target
 samples/target
+
+# build
+build/
+
+# gradle
+.gradle
