@@ -13,11 +13,7 @@ Implementations of Adhan in other languages can be found in the parent repo [Adh
 ### Gradle
 
 ```
-maven {
-   url "https://dl.bintray.com/batoulapps/adhan"
-}
-
-compile 'com.batoulapps.adhan:adhan:1.2.0'
+implementation 'com.batoulapps.adhan:adhan:1.2.0'
 ```
 
 ### Maven

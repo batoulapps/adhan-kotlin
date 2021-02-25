@@ -1,0 +1,11 @@
+plugins {
+   id 'application'
+}
+
+application {
+   mainClass = 'com.batoulapps.adhan.Example'
+}
+
+dependencies {
+   implementation project(":adhan")
+}

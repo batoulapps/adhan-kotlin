@@ -1,7 +1,10 @@
 language: android
+
+before_install:
+   - chmod +x gradlew
+
 script:
- - mvn -f pom.xml clean test
- - mvn cobertura:cobertura
+ - ./gradlew clean test
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
