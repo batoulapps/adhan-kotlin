@@ -1,0 +1,25 @@
+plugins {
+   id 'java'
+   id 'jacoco'
+   id "com.vanniktech.maven.publish" version "0.14.2"
+}
+
+test {
+   finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+   dependsOn test
+
+   reports {
+      xml.enabled true
+      xml.destination file("${buildDir}/reports/jacoco/report.xml")
+   }
+}
+
+dependencies {
+   testImplementation 'junit:junit:4.13.1'
+   testImplementation 'com.squareup.okio:okio:2.10.0'
+   testImplementation 'com.google.truth:truth:1.1.2'
+   testImplementation 'com.squareup.moshi:moshi:1.11.0'
+}
