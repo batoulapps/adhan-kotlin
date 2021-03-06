@@ -26,8 +26,8 @@ class CalculationMethodTest {
     assertEquals(MUSLIM_WORLD_LEAGUE, params.method)
 
     params = EGYPTIAN.parameters
-    assertTrue { abs(params.fajrAngle - 20) <= 0.000001 }
-    assertTrue { abs(params.ishaAngle - 18) <= 0.000001 }
+    assertTrue { abs(params.fajrAngle - 19.5) <= 0.000001 }
+    assertTrue { abs(params.ishaAngle - 17.5) <= 0.000001 }
     assertEquals(0, params.ishaInterval)
     assertEquals(EGYPTIAN, params.method)
 

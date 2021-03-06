@@ -84,7 +84,7 @@ enum class CalculationMethod {
         )
       }
       EGYPTIAN -> {
-        CalculationParameters(fajrAngle = 20.0, ishaAngle = 18.0, method = this,
+        CalculationParameters(fajrAngle = 19.5, ishaAngle = 17.5, method = this,
           methodAdjustments = PrayerAdjustments(0, 0, 1, 0, 0, 0)
         )
       }
