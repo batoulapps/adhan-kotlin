@@ -15,8 +15,8 @@ public class CalculationMethodTest {
     assertThat(params.method).isEqualTo(CalculationMethod.MUSLIM_WORLD_LEAGUE);
 
     params = CalculationMethod.EGYPTIAN.getParameters();
-    assertThat(params.fajrAngle).isWithin(0.000001).of(20);
-    assertThat(params.ishaAngle).isWithin(0.000001).of(18);
+    assertThat(params.fajrAngle).isWithin(0.000001).of(19.5);
+    assertThat(params.ishaAngle).isWithin(0.000001).of(17.5);
     assertThat(params.ishaInterval).isEqualTo(0);
     assertThat(params.method).isEqualTo(CalculationMethod.EGYPTIAN);
 
