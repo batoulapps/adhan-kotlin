@@ -4,6 +4,11 @@ plugins {
    id "com.vanniktech.maven.publish" version "0.14.2"
 }
 
+compileJava {
+   sourceCompatibility = JavaVersion.VERSION_1_8
+   targetCompatibility = JavaVersion.VERSION_1_8
+}
+
 test {
    finalizedBy jacocoTestReport
 }
