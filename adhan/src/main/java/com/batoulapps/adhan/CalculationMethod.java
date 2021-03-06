@@ -83,7 +83,7 @@ public enum CalculationMethod {
             .withMethodAdjustments(new PrayerAdjustments(0, 0, 1, 0, 0, 0));
       }
       case EGYPTIAN: {
-        return new CalculationParameters(20.0, 18.0, this)
+        return new CalculationParameters(19.5, 17.5, this)
             .withMethodAdjustments(new PrayerAdjustments(0, 0, 1, 0, 0, 0));
       }
       case KARACHI: {
