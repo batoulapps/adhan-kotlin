@@ -1,6 +1,6 @@
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.4.10"
+    kotlin("plugin.serialization") version "1.4.30"
 }
 
 kotlin {
@@ -21,7 +21,7 @@ kotlin {
         implementation(kotlin("test-common"))
         implementation(kotlin("test-annotations-common"))
         api("com.squareup.okio:okio-multiplatform:3.0.0-alpha.1")
-        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
+        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
     }
 
     sourceSets["jvmTest"].dependencies {
