@@ -1,5 +1,6 @@
 package com.batoulapps.adhan.data;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -20,6 +21,10 @@ public class DateComponents {
     calendar.setTime(date);
     return new DateComponents(calendar.get(Calendar.YEAR),
         calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
+  }
+
+  public static DateComponents from(LocalDate date){
+    return new DateComponents(date.getYear(),date.getMonthValue(),date.getDayOfMonth());
   }
 
   public DateComponents(int year, int month, int day) {
