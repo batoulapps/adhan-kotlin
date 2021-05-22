@@ -1,7 +1,11 @@
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization") version "1.5.0"
+    id("maven-publish")
 }
+
+group = "com.batoulapps.adhan"
+version = property("version") ?: ""
 
 kotlin {
     jvm {
