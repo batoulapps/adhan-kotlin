@@ -1,9 +1,5 @@
 package com.batoulapps.adhan
 
-import com.batoulapps.adhan.HighLatitudeRule.MIDDLE_OF_THE_NIGHT
-import com.batoulapps.adhan.HighLatitudeRule.SEVENTH_OF_THE_NIGHT
-import com.batoulapps.adhan.HighLatitudeRule.TWILIGHT_ANGLE
-
 /**
  * Parameters used for PrayerTime calculation customization
  *
@@ -37,15 +33,17 @@ data class CalculationParameters(
   val methodAdjustments: PrayerAdjustments = PrayerAdjustments()
 ) {
 
+  data class NightPortions constructor(val fajr: Double, val isha: Double)
+
   fun nightPortions(): NightPortions {
     return when (this.highLatitudeRule) {
-      MIDDLE_OF_THE_NIGHT -> {
+      HighLatitudeRule.MIDDLE_OF_THE_NIGHT -> {
         NightPortions(1.0 / 2.0, 1.0 / 2.0)
       }
-      SEVENTH_OF_THE_NIGHT -> {
+      HighLatitudeRule.SEVENTH_OF_THE_NIGHT -> {
         NightPortions(1.0 / 7.0, 1.0 / 7.0)
       }
-      TWILIGHT_ANGLE -> {
+      HighLatitudeRule.TWILIGHT_ANGLE -> {
         NightPortions(this.fajrAngle / 60.0, this.ishaAngle / 60.0)
       }
     }
