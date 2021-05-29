@@ -28,10 +28,11 @@ kotlin {
     } else {
         iosX64("ios")
     }
+    macosX64("macOS")
 
     sourceSets["commonMain"].dependencies {
         implementation("org.jetbrains.kotlin:kotlin-stdlib")
-        implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.0")
+        api("org.jetbrains.kotlinx:kotlinx-datetime:0.2.0")
     }
 
     sourceSets["commonTest"].dependencies {
