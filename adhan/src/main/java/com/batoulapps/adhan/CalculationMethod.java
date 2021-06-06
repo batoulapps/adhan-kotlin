@@ -67,6 +67,18 @@ public enum CalculationMethod {
   SINGAPORE,
 
   /**
+   * Shia Ithna Ashari, Leva Institute, Qum
+   * Uses Fajr angle of 16, Maghrib angle of 4 and Isha angle of 14
+   */
+  JAFARI,
+
+  /**
+   * Shia, Institute of Geophysics, University of Tehran
+   * Uses Fajr angle of 17.7, Maghrib angle of 4.5 and Isha angle of 14
+   */
+  TEHRAN,
+
+  /**
    * The default value for {@link CalculationParameters#method} when initializing a
    * {@link CalculationParameters} object. Sets a Fajr angle of 0 and an Isha angle of 0.
    */
@@ -114,6 +126,12 @@ public enum CalculationMethod {
       case SINGAPORE: {
         return new CalculationParameters(20.0, 18.0, this)
             .withMethodAdjustments(new PrayerAdjustments(0, 0, 1, 0, 0, 0));
+      }
+      case JAFARI: {
+        return new CalculationParameters(16.0, 14.0, 4.0, this);
+      }
+      case TEHRAN: {
+        return new CalculationParameters(17.7, 14.0, 4.5, this);
       }
       case OTHER: {
         return new CalculationParameters(0.0, 0.0, this);

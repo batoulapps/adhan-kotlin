@@ -68,7 +68,17 @@ public class PrayerTimes {
     if (!error) {
       tempDhuhr = transit;
       tempSunrise = sunriseComponents;
-      tempMaghrib = sunsetComponents;
+
+      if (parameters.method == CalculationMethod.JAFARI
+          || parameters.method == CalculationMethod.TEHRAN) {
+        timeComponents = TimeComponents.fromDouble(
+            solarTime.hourAngle(-parameters.maghribAngle, true));
+        if (timeComponents != null) {
+          tempMaghrib = timeComponents.dateComponents(date);
+        }
+      } else {
+        tempMaghrib = sunsetComponents;
+      }
 
       timeComponents = TimeComponents.fromDouble(
           solarTime.afternoon(parameters.madhab.getShadowLength()));

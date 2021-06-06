@@ -25,6 +25,11 @@ public class CalculationParameters {
   public double ishaAngle;
 
   /**
+   * The angle of the sun used to calculate maghrib
+   */
+  public double maghribAngle;
+
+  /**
    * Minutes after Maghrib (if set, the time for Isha will be Maghrib plus IshaInterval)
    */
   public int ishaInterval;
@@ -60,6 +65,18 @@ public class CalculationParameters {
   }
 
   /**
+   * Generate CalculationParameters from angles
+   * @param fajrAngle the angle for calculating fajr
+   * @param maghribAngle the angle for calculating maghrib
+   * @param ishaAngle the angle for calculating isha
+   */
+  public CalculationParameters(double fajrAngle, double ishaAngle, double maghribAngle) {
+    this.fajrAngle = fajrAngle;
+    this.ishaAngle = ishaAngle;
+    this.maghribAngle = maghribAngle;
+  }
+
+  /**
    * Generate CalculationParameters from fajr angle and isha interval
    * @param fajrAngle the angle for calculating fajr
    * @param ishaInterval the amount of time after maghrib to have isha
@@ -77,6 +94,19 @@ public class CalculationParameters {
    */
   public CalculationParameters(double fajrAngle, double ishaAngle, CalculationMethod method) {
     this(fajrAngle, ishaAngle);
+    this.method = method;
+  }
+
+  /**
+   * Generate CalculationParameters from angles and a calculation method
+   * @param fajrAngle    the angle for calculating fajr
+   * @param maghribAngle the angle for calculating maghrib
+   * @param ishaAngle    the angle for calculating isha
+   * @param method       the calculation method to use
+   */
+  public CalculationParameters(double fajrAngle, double ishaAngle, double maghribAngle,
+      CalculationMethod method) {
+    this(fajrAngle, ishaAngle, maghribAngle);
     this.method = method;
   }
 
