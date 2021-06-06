@@ -24,8 +24,8 @@ public enum CalculationMethod {
 
   /**
    * Umm al-Qura University, Makkah
-   * Uses a Fajr angle of 18.5 and an Isha angle of 90. Note: You should add a +30 minute custom
-   * adjustment of Isha during Ramadan.
+   * Uses a Fajr angle of 18.5 and an Isha interval of 90 minutes.
+   * Note: You should add a +30 minute custom adjustment of Isha during Ramadan.
    */
   UMM_AL_QURA,
 
@@ -77,6 +77,30 @@ public enum CalculationMethod {
    * Uses Fajr angle of 17.7, Maghrib angle of 4.5 and Isha angle of 14
    */
   TEHRAN,
+
+  /**
+   * Gulf region
+   * Modified version of Umm al-Qura that uses a Fajr angle of 19.5.
+   */
+  GULF,
+
+  /**
+   * Union Organization Islamic de France
+   * Uses a Fajr angle of 12 and an Isha angle of 12.
+   */
+  FRANCE,
+
+  /**
+   * Diyanet İşleri Başkanlığı, Turkey
+   * Uses a Fajr angle of 18 and an Isha angle of 17.
+   */
+  TURKEY,
+
+  /**
+   * Spiritual Administration of Muslims of Russia
+   * Uses a Fajr angle of 16 and an Isha angle of 15.
+   */
+  RUSSIA,
 
   /**
    * The default value for {@link CalculationParameters#method} when initializing a
@@ -132,6 +156,18 @@ public enum CalculationMethod {
       }
       case TEHRAN: {
         return new CalculationParameters(17.7, 14.0, 4.5, this);
+      }
+      case GULF: {
+        return new CalculationParameters(19.5, 90, this);
+      }
+      case FRANCE: {
+        return new CalculationParameters(12.0, 12.0, this);
+      }
+      case TURKEY: {
+        return new CalculationParameters(18.0, 17.0, this);
+      }
+      case RUSSIA: {
+        return new CalculationParameters(16.0, 15.0, this);
       }
       case OTHER: {
         return new CalculationParameters(0.0, 0.0, this);
