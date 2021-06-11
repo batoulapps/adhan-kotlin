@@ -11,15 +11,15 @@ import com.batoulapps.adhan.data.CalendarUtil.add
 import com.batoulapps.adhan.data.CalendarUtil.isLeapYear
 import com.batoulapps.adhan.data.CalendarUtil.resolveTime
 import com.batoulapps.adhan.data.CalendarUtil.roundedMinute
+import com.batoulapps.adhan.data.CalendarUtil.toUtcInstant
 import com.batoulapps.adhan.data.DateComponents
 import com.batoulapps.adhan.data.TimeComponents
 import com.batoulapps.adhan.internal.SolarTime
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 import kotlin.jvm.JvmOverloads
 import kotlin.math.abs
 import kotlin.math.roundToInt
@@ -29,40 +29,40 @@ data class PrayerTimes(
   val dateComponents: DateComponents,
   val calculationParameters: CalculationParameters
 ) {
-  val fajr: LocalDateTime
-  val sunrise: LocalDateTime
-  val dhuhr: LocalDateTime
-  val asr: LocalDateTime
-  val maghrib: LocalDateTime
-  val isha: LocalDateTime
+  val fajr: Instant
+  val sunrise: Instant
+  val dhuhr: Instant
+  val asr: Instant
+  val maghrib: Instant
+  val isha: Instant
 
   @JvmOverloads
-  fun currentPrayer(time: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.UTC)): Prayer {
+  fun currentPrayer(instant: Instant): Prayer {
     return when {
-      time >= isha -> { ISHA }
-      time >= maghrib -> { MAGHRIB }
-      time >= asr -> { ASR }
-      time >= dhuhr -> { DHUHR }
-      time >= sunrise -> { SUNRISE }
-      time >= fajr -> { FAJR }
+      instant >= isha -> { ISHA }
+      instant >= maghrib -> { MAGHRIB }
+      instant >= asr -> { ASR }
+      instant >= dhuhr -> { DHUHR }
+      instant >= sunrise -> { SUNRISE }
+      instant >= fajr -> { FAJR }
       else -> { NONE }
     }
   }
 
   @JvmOverloads
-  fun nextPrayer(time: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.UTC)): Prayer {
+  fun nextPrayer(instant: Instant): Prayer {
     return when {
-      time >= isha -> { NONE }
-      time >= maghrib -> { ISHA }
-      time >= asr -> { MAGHRIB }
-      time >= dhuhr -> { ASR }
-      time >= sunrise -> { DHUHR }
-      time >= fajr -> { SUNRISE }
+      instant >= isha -> { NONE }
+      instant >= maghrib -> { ISHA }
+      instant >= asr -> { MAGHRIB }
+      instant >= dhuhr -> { ASR }
+      instant >= sunrise -> { DHUHR }
+      instant >= fajr -> { SUNRISE }
       else -> { FAJR }
     }
   }
 
-  fun timeForPrayer(prayer: Prayer): LocalDateTime? {
+  fun timeForPrayer(prayer: Prayer): Instant? {
     return when (prayer) {
       FAJR -> fajr
       SUNRISE -> sunrise
@@ -281,42 +281,42 @@ data class PrayerTimes(
           calculationParameters.methodAdjustments.fajr,
           DateTimeUnit.MINUTE
         )
-      )
+      ).toUtcInstant()
       sunrise = roundedMinute(
         add(
           add(tempSunrise!!, calculationParameters.prayerAdjustments.sunrise, DateTimeUnit.MINUTE),
           calculationParameters.methodAdjustments.sunrise,
           DateTimeUnit.MINUTE
         )
-      )
+      ).toUtcInstant()
       dhuhr = roundedMinute(
         add(
           add(tempDhuhr!!, calculationParameters.prayerAdjustments.dhuhr, DateTimeUnit.MINUTE),
           calculationParameters.methodAdjustments.dhuhr,
           DateTimeUnit.MINUTE
         )
-      )
+      ).toUtcInstant()
       asr = roundedMinute(
         add(
           add(tempAsr, calculationParameters.prayerAdjustments.asr, DateTimeUnit.MINUTE),
           calculationParameters.methodAdjustments.asr,
           DateTimeUnit.MINUTE
         )
-      )
+      ).toUtcInstant()
       maghrib = roundedMinute(
         add(
           add(tempMaghrib!!, calculationParameters.prayerAdjustments.maghrib, DateTimeUnit.MINUTE),
           calculationParameters.methodAdjustments.maghrib,
           DateTimeUnit.MINUTE
         )
-      )
+      ).toUtcInstant()
       isha = roundedMinute(
         add(
           add(tempIsha!!, calculationParameters.prayerAdjustments.isha, DateTimeUnit.MINUTE),
           calculationParameters.methodAdjustments.isha,
           DateTimeUnit.MINUTE
         )
-      )
+      ).toUtcInstant()
     }
   }
 }

@@ -20,6 +20,7 @@ import com.batoulapps.adhan.data.DateComponents
 import com.batoulapps.adhan.data.TimingFile
 import com.batoulapps.adhan.data.TimingParameters
 import com.batoulapps.adhan.internal.TestUtils.getDateComponents
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -87,7 +88,7 @@ class TimingTest {
   }
 
   private fun getDifferenceInMinutes(
-    prayerTime: LocalDateTime,
+    prayerTime: Instant,
     jsonTime: String,
     timezone: String
   ): Long {
@@ -101,7 +102,7 @@ class TimingTest {
     }
 
     val targetTimeZone = TimeZone.of(timezone)
-    val calculatedDateTime = prayerTime.toInstant(TimeZone.UTC).toLocalDateTime(targetTimeZone)
+    val calculatedDateTime = prayerTime.toLocalDateTime(targetTimeZone)
 
     val referenceDateTime = LocalDateTime(
       // PrayerTimes is in UTC, so we need calculatedDateTime here instead

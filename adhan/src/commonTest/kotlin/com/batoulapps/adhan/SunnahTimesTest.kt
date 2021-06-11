@@ -7,6 +7,7 @@ import com.batoulapps.adhan.HighLatitudeRule.MIDDLE_OF_THE_NIGHT
 import com.batoulapps.adhan.HighLatitudeRule.SEVENTH_OF_THE_NIGHT
 import com.batoulapps.adhan.data.DateComponents
 import com.batoulapps.adhan.internal.TestUtils.pad
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -145,9 +146,9 @@ class SunnahTimesTest {
     assertEquals("10/25/15, 2:42 AM", stringifyAtTimezone(sunnahTimes.lastThirdOfTheNight, zoneId))
   }
 
-  private fun stringifyAtTimezone(time: LocalDateTime, zoneId: String): String {
+  private fun stringifyAtTimezone(time: Instant, zoneId: String): String {
     val timeZone = TimeZone.of(zoneId)
-    val localDateTime = time.toInstant(TimeZone.UTC).toLocalDateTime(timeZone)
+    val localDateTime = time.toLocalDateTime(timeZone)
 
     // hour is 0-23
     val initialHour = localDateTime.hour

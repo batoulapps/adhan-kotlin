@@ -17,6 +17,7 @@ import com.batoulapps.adhan.data.DateComponents
 import com.batoulapps.adhan.internal.TestUtils.addSeconds
 import com.batoulapps.adhan.internal.TestUtils.makeDate
 import com.batoulapps.adhan.internal.TestUtils.pad
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -54,9 +55,9 @@ class PrayerTimesTest {
     assertEquals(value, PrayerTimes.daysSinceSolstice(dayOfYear, localDateTime.year, latitude))
   }
 
-  private fun stringifyAtTimezone(time: LocalDateTime, zoneId: String): String {
+  private fun stringifyAtTimezone(time: Instant, zoneId: String): String {
     val timeZone = TimeZone.of(zoneId)
-    val localDateTime = time.toInstant(TimeZone.UTC).toLocalDateTime(timeZone)
+    val localDateTime = time.toLocalDateTime(timeZone)
 
     // hour is 0-23
     val initialHour = localDateTime.hour

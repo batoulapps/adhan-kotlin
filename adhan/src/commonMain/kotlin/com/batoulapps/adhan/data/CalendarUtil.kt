@@ -1,6 +1,7 @@
 package com.batoulapps.adhan.data
 
 import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
@@ -57,12 +58,24 @@ object CalendarUtil {
    * Add the specified amount of a unit of time to a particular date
    * @param localDateTime the original date
    * @param amount the amount to add
-   * @param field the field to add it to
+   * @param dateTimeUnit the field to add it to
    * @return the date with the offset added
    */
   fun add(localDateTime: LocalDateTime, amount: Int, dateTimeUnit: DateTimeUnit): LocalDateTime {
     val timezone = TimeZone.UTC
     val instant = localDateTime.toInstant(timezone)
+    return add(instant, amount, dateTimeUnit)
+  }
+
+  /**
+   * Add the specified amount of a unit of time to a particular date
+   * @param instant the gmt instant
+   * @param amount the amount to add
+   * @param dateTimeUnit the field to add it to
+   * @return the date with the offset added
+   */
+  fun add(instant: Instant, amount: Int, dateTimeUnit: DateTimeUnit): LocalDateTime {
+    val timezone = TimeZone.UTC
     val updatedInstant = instant.plus(amount, dateTimeUnit, timezone)
     return updatedInstant.toLocalDateTime(timezone)
   }
@@ -77,4 +90,6 @@ object CalendarUtil {
   private fun resolveTime(year: Int, month: Int, day: Int): LocalDateTime {
     return LocalDateTime(year, month, day, 0, 0, 0)
   }
+
+  fun LocalDateTime.toUtcInstant(): Instant = toInstant(TimeZone.UTC)
 }

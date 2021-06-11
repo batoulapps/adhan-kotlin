@@ -1,8 +1,10 @@
 package com.batoulapps.adhan.internal
 
 import com.batoulapps.adhan.data.CalendarUtil
+import com.batoulapps.adhan.data.CalendarUtil.toUtcInstant
 import com.batoulapps.adhan.data.DateComponents
 import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
@@ -43,8 +45,8 @@ object TestUtils {
     return DateComponents(year, month, day)
   }
 
-  fun addSeconds(localDateTime: LocalDateTime, offset: Int): LocalDateTime {
-    return CalendarUtil.add(localDateTime, offset, DateTimeUnit.SECOND)
+  fun addSeconds(gmtInstant: Instant, offset: Int): Instant {
+    return CalendarUtil.add(gmtInstant, offset, DateTimeUnit.SECOND).toUtcInstant()
   }
 
   fun makeDateWithOffset(year: Int, month: Int, day: Int, offset: Int, dateTimeUnit: DateTimeUnit): DateComponents {
