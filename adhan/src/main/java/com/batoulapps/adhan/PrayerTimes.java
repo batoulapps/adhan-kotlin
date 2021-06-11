@@ -104,17 +104,17 @@ public class PrayerTimes {
 
       final CalculationParameters.NightPortions nightPortions = parameters.nightPortions();
 
-      final Date safeFajr;
+      Date safeFajr = null;
       if (parameters.method == CalculationMethod.MOON_SIGHTING_COMMITTEE) {
         safeFajr = seasonAdjustedMorningTwilight(coordinates.latitude, dayOfYear, date.year, sunriseComponents);
-      } else {
+      } else if (nightPortions != null) {
         double portion = nightPortions.fajr;
         long nightFraction = (long) (portion * night / 1000);
         safeFajr = CalendarUtil.add(
             sunriseComponents, -1 * (int) nightFraction, Calendar.SECOND);
       }
 
-      if (tempFajr == null || tempFajr.before(safeFajr)) {
+      if (safeFajr != null && (tempFajr == null || tempFajr.before(safeFajr))) {
         tempFajr = safeFajr;
       }
 
@@ -134,17 +134,17 @@ public class PrayerTimes {
           tempIsha = CalendarUtil.add(sunsetComponents, (int) nightFraction, Calendar.SECOND);
         }
 
-        final Date safeIsha;
+        Date safeIsha = null;
         if (parameters.method == CalculationMethod.MOON_SIGHTING_COMMITTEE) {
             safeIsha = PrayerTimes.seasonAdjustedEveningTwilight(
                 coordinates.latitude, dayOfYear, date.year, sunsetComponents);
-        } else {
+        } else if (nightPortions != null) {
           double portion = nightPortions.isha;
           long nightFraction = (long) (portion * night / 1000);
           safeIsha = CalendarUtil.add(sunsetComponents, (int) nightFraction, Calendar.SECOND);
         }
 
-        if (tempIsha == null || (tempIsha.after(safeIsha))) {
+        if (safeIsha != null && (tempIsha == null || (tempIsha.after(safeIsha)))) {
           tempIsha = safeIsha;
         }
       }

@@ -4,6 +4,8 @@ package com.batoulapps.adhan;
  * Rules for dealing with Fajr and Isha at places with high latitudes
  */
 public enum HighLatitudeRule {
+  NONE,
+
   /**
    * Fajr will never be earlier than the middle of the night, and Isha will never be later than
    * the middle of the night.

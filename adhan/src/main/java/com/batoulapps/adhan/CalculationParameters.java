@@ -143,6 +143,9 @@ public class CalculationParameters {
 
   NightPortions nightPortions() {
     switch (this.highLatitudeRule) {
+      case NONE: {
+        return null;
+      }
       case MIDDLE_OF_THE_NIGHT: {
         return new NightPortions(1.0 / 2.0, 1.0 / 2.0);
       }
