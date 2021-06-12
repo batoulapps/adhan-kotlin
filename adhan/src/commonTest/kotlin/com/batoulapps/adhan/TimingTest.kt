@@ -28,7 +28,6 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import okio.ExperimentalFileSystem
-import okio.FileSystem
 import okio.Path.Companion.toPath
 import kotlin.math.abs
 import kotlin.test.Test
@@ -40,7 +39,7 @@ class TimingTest {
   @Test
   fun testTimes() {
     val json = Json { ignoreUnknownKeys = true }
-    val fs = FileSystem.SYSTEM
+    val fs = TestUtil().fileSystem()
 
     val jsonPath = "../Shared/Times/".toPath()
     if (!fs.exists(jsonPath)) {

@@ -32,13 +32,13 @@ kotlin {
 
     sourceSets["commonMain"].dependencies {
         implementation("org.jetbrains.kotlin:kotlin-stdlib")
-        api("org.jetbrains.kotlinx:kotlinx-datetime:0.2.0")
+        api("org.jetbrains.kotlinx:kotlinx-datetime:0.2.1")
     }
 
     sourceSets["commonTest"].dependencies {
         implementation(kotlin("test-common"))
         implementation(kotlin("test-annotations-common"))
-        api("com.squareup.okio:okio-multiplatform:3.0.0-alpha.5")
+        api("com.squareup.okio:okio-multiplatform:3.0.0-alpha.6")
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
     }
 
