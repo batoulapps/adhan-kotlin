@@ -28,6 +28,7 @@ public class CalendarUtil {
     double second = calendar.get(Calendar.SECOND);
     calendar.set(Calendar.MINUTE, (int) (minute + Math.round(second / 60)));
     calendar.set(Calendar.SECOND, 0);
+    calendar.set(Calendar.MILLISECOND, 0);
     return calendar.getTime();
   }
 
