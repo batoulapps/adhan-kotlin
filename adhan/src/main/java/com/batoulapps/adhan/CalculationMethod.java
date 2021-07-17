@@ -15,10 +15,15 @@ public enum CalculationMethod {
    * Uses Fajr angle of 19.5 and an Isha angle of 17.5
    */
   EGYPTIAN,
-
+  
+/**
+   * Egyptian General Authority of Survey
+   * Uses Fajr angle of 19.5 and an Isha angle of 17.5
+   */
+  TEHRAN,
   /**
-   * University of Islamic Sciences, Karachi
-   * Uses Fajr angle of 18 and an Isha angle of 18
+   * Institute of Geophysics, University of Tehran
+   * Uses Fajr angle of 17.7 and an Isha angle of 14
    */
   KARACHI,
 
@@ -84,6 +89,10 @@ public enum CalculationMethod {
       }
       case EGYPTIAN: {
         return new CalculationParameters(19.5, 17.5, this)
+            .withMethodAdjustments(new PrayerAdjustments(0, 0, 1, 0, 0, 0));
+      }
+        case TEHRAN: {
+        return new CalculationParameters(17.7, 14, this)
             .withMethodAdjustments(new PrayerAdjustments(0, 0, 1, 0, 0, 0));
       }
       case KARACHI: {
