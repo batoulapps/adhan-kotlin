@@ -1,10 +1,10 @@
-package com.batoulapps.adhan.internal
+package com.batoulapps.adhan2.internal
 
-import com.batoulapps.adhan.Coordinates
-import com.batoulapps.adhan.data.DateComponents
-import com.batoulapps.adhan.internal.Astronomical.approximateTransit
-import com.batoulapps.adhan.internal.Astronomical.correctedHourAngle
-import com.batoulapps.adhan.internal.Astronomical.correctedTransit
+import com.batoulapps.adhan2.Coordinates
+import com.batoulapps.adhan2.data.DateComponents
+import com.batoulapps.adhan2.internal.Astronomical.approximateTransit
+import com.batoulapps.adhan2.internal.Astronomical.correctedHourAngle
+import com.batoulapps.adhan2.internal.Astronomical.correctedTransit
 import kotlin.math.abs
 import kotlin.math.atan
 import kotlin.math.tan

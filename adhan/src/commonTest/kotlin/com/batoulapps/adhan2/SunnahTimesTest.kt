@@ -1,16 +1,14 @@
-package com.batoulapps.adhan
+package com.batoulapps.adhan2
 
-import com.batoulapps.adhan.CalculationMethod.MOON_SIGHTING_COMMITTEE
-import com.batoulapps.adhan.CalculationMethod.MUSLIM_WORLD_LEAGUE
-import com.batoulapps.adhan.CalculationMethod.NORTH_AMERICA
-import com.batoulapps.adhan.HighLatitudeRule.MIDDLE_OF_THE_NIGHT
-import com.batoulapps.adhan.HighLatitudeRule.SEVENTH_OF_THE_NIGHT
-import com.batoulapps.adhan.data.DateComponents
-import com.batoulapps.adhan.internal.TestUtils.pad
+import com.batoulapps.adhan2.CalculationMethod.MOON_SIGHTING_COMMITTEE
+import com.batoulapps.adhan2.CalculationMethod.MUSLIM_WORLD_LEAGUE
+import com.batoulapps.adhan2.CalculationMethod.NORTH_AMERICA
+import com.batoulapps.adhan2.HighLatitudeRule.MIDDLE_OF_THE_NIGHT
+import com.batoulapps.adhan2.HighLatitudeRule.SEVENTH_OF_THE_NIGHT
+import com.batoulapps.adhan2.data.DateComponents
+import com.batoulapps.adhan2.internal.TestUtils.pad
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlin.test.Test
 import kotlin.test.assertEquals

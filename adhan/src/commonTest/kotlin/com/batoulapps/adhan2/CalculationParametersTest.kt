@@ -1,8 +1,8 @@
-package com.batoulapps.adhan
+package com.batoulapps.adhan2
 
-import com.batoulapps.adhan.HighLatitudeRule.MIDDLE_OF_THE_NIGHT
-import com.batoulapps.adhan.HighLatitudeRule.SEVENTH_OF_THE_NIGHT
-import com.batoulapps.adhan.HighLatitudeRule.TWILIGHT_ANGLE
+import com.batoulapps.adhan2.HighLatitudeRule.MIDDLE_OF_THE_NIGHT
+import com.batoulapps.adhan2.HighLatitudeRule.SEVENTH_OF_THE_NIGHT
+import com.batoulapps.adhan2.HighLatitudeRule.TWILIGHT_ANGLE
 import kotlin.math.abs
 import kotlin.test.Test
 import kotlin.test.assertTrue

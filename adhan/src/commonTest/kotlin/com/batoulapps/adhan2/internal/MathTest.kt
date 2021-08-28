@@ -1,11 +1,11 @@
-package com.batoulapps.adhan.internal
+package com.batoulapps.adhan2.internal
 
-import com.batoulapps.adhan.data.CalendarUtil.roundedMinute
-import com.batoulapps.adhan.data.TimeComponents
-import com.batoulapps.adhan.internal.DoubleUtil.closestAngle
-import com.batoulapps.adhan.internal.DoubleUtil.normalizeWithBound
-import com.batoulapps.adhan.internal.DoubleUtil.unwindAngle
-import com.batoulapps.adhan.internal.TestUtils.makeDate
+import com.batoulapps.adhan2.data.CalendarUtil.roundedMinute
+import com.batoulapps.adhan2.data.TimeComponents
+import com.batoulapps.adhan2.internal.DoubleUtil.closestAngle
+import com.batoulapps.adhan2.internal.DoubleUtil.normalizeWithBound
+import com.batoulapps.adhan2.internal.DoubleUtil.unwindAngle
+import com.batoulapps.adhan2.internal.TestUtils.makeDate
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.test.Test

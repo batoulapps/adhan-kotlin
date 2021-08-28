@@ -1,9 +1,9 @@
-package com.batoulapps.adhan.internal
+package com.batoulapps.adhan2.internal
 
-import com.batoulapps.adhan.Coordinates
-import com.batoulapps.adhan.internal.DoubleUtil.closestAngle
-import com.batoulapps.adhan.internal.DoubleUtil.normalizeWithBound
-import com.batoulapps.adhan.internal.DoubleUtil.unwindAngle
+import com.batoulapps.adhan2.Coordinates
+import com.batoulapps.adhan2.internal.DoubleUtil.closestAngle
+import com.batoulapps.adhan2.internal.DoubleUtil.normalizeWithBound
+import com.batoulapps.adhan2.internal.DoubleUtil.unwindAngle
 import kotlin.math.acos
 import kotlin.math.asin
 import kotlin.math.cos

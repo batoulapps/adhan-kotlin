@@ -1,4 +1,4 @@
-package com.batoulapps.adhan
+package com.batoulapps.adhan2
 
 /**
  * Parameters used for PrayerTime calculation customization

@@ -1,6 +1,6 @@
-package com.batoulapps.adhan;
+package com.batoulapps.adhan2;
 
-import com.batoulapps.adhan.data.DateComponents;
+import com.batoulapps.adhan2.data.DateComponents;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

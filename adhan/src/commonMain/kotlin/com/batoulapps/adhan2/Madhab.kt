@@ -1,8 +1,8 @@
-package com.batoulapps.adhan
+package com.batoulapps.adhan2
 
-import com.batoulapps.adhan.internal.ShadowLength
-import com.batoulapps.adhan.internal.ShadowLength.DOUBLE
-import com.batoulapps.adhan.internal.ShadowLength.SINGLE
+import com.batoulapps.adhan2.internal.ShadowLength
+import com.batoulapps.adhan2.internal.ShadowLength.DOUBLE
+import com.batoulapps.adhan2.internal.ShadowLength.SINGLE
 
 /**
  * Madhab for determining how Asr is calculated

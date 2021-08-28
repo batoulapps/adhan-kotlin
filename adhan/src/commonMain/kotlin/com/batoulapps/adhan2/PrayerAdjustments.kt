@@ -1,4 +1,4 @@
-package com.batoulapps.adhan
+package com.batoulapps.adhan2
 
 /**
  * Adjustment value for prayer times, in minutes

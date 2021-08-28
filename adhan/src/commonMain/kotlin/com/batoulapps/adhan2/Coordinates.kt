@@ -1,4 +1,4 @@
-package com.batoulapps.adhan
+package com.batoulapps.adhan2
 
 /**
  * Coordinates representing a particular place

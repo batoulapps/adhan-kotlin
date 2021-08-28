@@ -1,8 +1,8 @@
-package com.batoulapps.adhan.internal
+package com.batoulapps.adhan2.internal
 
-import com.batoulapps.adhan.data.CalendarUtil
-import com.batoulapps.adhan.data.CalendarUtil.toUtcInstant
-import com.batoulapps.adhan.data.DateComponents
+import com.batoulapps.adhan2.data.CalendarUtil
+import com.batoulapps.adhan2.data.CalendarUtil.toUtcInstant
+import com.batoulapps.adhan2.data.DateComponents
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime

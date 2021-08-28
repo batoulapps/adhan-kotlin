@@ -1,10 +1,10 @@
-package com.batoulapps.adhan
+package com.batoulapps.adhan2
 
-import com.batoulapps.adhan.data.CalendarUtil
-import com.batoulapps.adhan.data.CalendarUtil.add
-import com.batoulapps.adhan.data.CalendarUtil.roundedMinute
-import com.batoulapps.adhan.data.CalendarUtil.toUtcInstant
-import com.batoulapps.adhan.data.DateComponents
+import com.batoulapps.adhan2.data.CalendarUtil
+import com.batoulapps.adhan2.data.CalendarUtil.add
+import com.batoulapps.adhan2.data.CalendarUtil.roundedMinute
+import com.batoulapps.adhan2.data.CalendarUtil.toUtcInstant
+import com.batoulapps.adhan2.data.DateComponents
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 

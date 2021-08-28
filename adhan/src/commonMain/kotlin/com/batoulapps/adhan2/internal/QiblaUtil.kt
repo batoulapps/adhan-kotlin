@@ -1,6 +1,6 @@
-package com.batoulapps.adhan.internal
+package com.batoulapps.adhan2.internal
 
-import com.batoulapps.adhan.Coordinates
+import com.batoulapps.adhan2.Coordinates
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin

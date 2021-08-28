@@ -17,14 +17,14 @@ maven {
    url "https://dl.bintray.com/batoulapps/adhan"
 }
 
-compile 'com.batoulapps.adhan:adhan:1.2.0'
+compile 'com.batoulapps.adhan2:adhan:1.2.0'
 ```
 
 ### Maven
 
 ```
 <dependency>
-   <groupId>com.batoulapps.adhan</groupId>
+   <groupId>com.batoulapps.adhan2</groupId>
    <artifactId>adhan</artifactId>
    <version>1.2.0</version>
 </dependency>

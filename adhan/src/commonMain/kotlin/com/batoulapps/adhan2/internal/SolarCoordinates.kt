@@ -1,15 +1,15 @@
-package com.batoulapps.adhan.internal
+package com.batoulapps.adhan2.internal
 
-import com.batoulapps.adhan.internal.Astronomical.apparentObliquityOfTheEcliptic
-import com.batoulapps.adhan.internal.Astronomical.apparentSolarLongitude
-import com.batoulapps.adhan.internal.Astronomical.ascendingLunarNodeLongitude
-import com.batoulapps.adhan.internal.Astronomical.meanLunarLongitude
-import com.batoulapps.adhan.internal.Astronomical.meanObliquityOfTheEcliptic
-import com.batoulapps.adhan.internal.Astronomical.meanSiderealTime
-import com.batoulapps.adhan.internal.Astronomical.meanSolarLongitude
-import com.batoulapps.adhan.internal.Astronomical.nutationInLongitude
-import com.batoulapps.adhan.internal.Astronomical.nutationInObliquity
-import com.batoulapps.adhan.internal.DoubleUtil.unwindAngle
+import com.batoulapps.adhan2.internal.Astronomical.apparentObliquityOfTheEcliptic
+import com.batoulapps.adhan2.internal.Astronomical.apparentSolarLongitude
+import com.batoulapps.adhan2.internal.Astronomical.ascendingLunarNodeLongitude
+import com.batoulapps.adhan2.internal.Astronomical.meanLunarLongitude
+import com.batoulapps.adhan2.internal.Astronomical.meanObliquityOfTheEcliptic
+import com.batoulapps.adhan2.internal.Astronomical.meanSiderealTime
+import com.batoulapps.adhan2.internal.Astronomical.meanSolarLongitude
+import com.batoulapps.adhan2.internal.Astronomical.nutationInLongitude
+import com.batoulapps.adhan2.internal.Astronomical.nutationInObliquity
+import com.batoulapps.adhan2.internal.DoubleUtil.unwindAngle
 import kotlin.math.asin
 import kotlin.math.atan2
 import kotlin.math.cos

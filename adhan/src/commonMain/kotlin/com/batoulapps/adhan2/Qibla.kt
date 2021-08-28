@@ -1,6 +1,6 @@
-package com.batoulapps.adhan
+package com.batoulapps.adhan2
 
-import com.batoulapps.adhan.internal.QiblaUtil
+import com.batoulapps.adhan2.internal.QiblaUtil
 
 class Qibla(coordinates: Coordinates) {
   val direction: Double = QiblaUtil.calculateQiblaDirection(coordinates)

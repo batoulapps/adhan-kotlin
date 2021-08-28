@@ -1,4 +1,4 @@
-package com.batoulapps.adhan
+package com.batoulapps.adhan2
 
 import kotlin.math.abs
 import kotlin.test.Test

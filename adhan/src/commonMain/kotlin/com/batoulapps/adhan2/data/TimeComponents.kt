@@ -1,4 +1,4 @@
-package com.batoulapps.adhan.data
+package com.batoulapps.adhan2.data
 
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime

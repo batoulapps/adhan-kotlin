@@ -1,4 +1,4 @@
-package com.batoulapps.adhan
+package com.batoulapps.adhan2
 
 /**
  * Standard calculation methods for calculating prayer times
