@@ -1,6 +1,6 @@
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.5.10"
+    kotlin("plugin.serialization") version "1.5.21"
     id("maven-publish")
     id("signing")
 }
@@ -39,8 +39,8 @@ kotlin {
     sourceSets["commonTest"].dependencies {
         implementation(kotlin("test-common"))
         implementation(kotlin("test-annotations-common"))
-        api("com.squareup.okio:okio-multiplatform:3.0.0-alpha.6")
-        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
+        api("com.squareup.okio:okio-multiplatform:3.0.0-alpha.9")
+        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
     }
 
     sourceSets["jvmTest"].dependencies {
