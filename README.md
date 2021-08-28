@@ -1,39 +1,31 @@
-# Adhan Java
+# Adhan Kotlin Multiplatform
 
 [![badge-travis][]][travis] [![badge-cov][]][codecov]
 
-Adhan Java is a well tested and well documented library for calculating Islamic prayer times. Adhan Java is written to be compatible with Java and Android devices of all api versions. It compiles against Java 7 to ensure compatibility with Android. It has a small method overhead, and has no external dependencies.
+Adhan is a well tested and well documented library for calculating Islamic prayer times. Adhan is written using Kotlin Multiplatform and works on multiple platforms. It has a small method overhead, and has no external dependencies.
 
 All astronomical calculations are high precision equations directly from the book [“Astronomical Algorithms” by Jean Meeus](http://www.willbell.com/math/mc1.htm). This book is recommended by the Astronomical Applications Department of the U.S. Naval Observatory and the Earth System Research Laboratory of the National Oceanic and Atmospheric Administration.
 
 Implementations of Adhan in other languages can be found in the parent repo [Adhan](https://github.com/batoulapps/Adhan).
+
+This branch is for the Kotlin Multiplatform version. There is also a branch for a pure Java version of the library.
 
 ## Usage
 
 ### Gradle
 
 ```
-maven {
-   url "https://dl.bintray.com/batoulapps/adhan"
-}
-
-compile 'com.batoulapps.adhan2:adhan:1.2.0'
+implementation("com.batoulapps.adhan2:adhan:0.0.2")
 ```
 
-### Maven
+**Note** - on Android, [kotlinx.datetime](https://github.com/Kotlin/kotlinx-datetime) uses `java.time`, which needs either a minimum api level of 26, or enabling of `coreLibraryDesugaring` as per the instructions [here](https://developer.android.com/studio/write/java8-support#library-desugaring).
 
-```
-<dependency>
-   <groupId>com.batoulapps.adhan2</groupId>
-   <artifactId>adhan</artifactId>
-   <version>1.2.0</version>
-</dependency>
-```
+### General Usage
 
-To get prayer times, initialize a new `PrayerTimes` object passing in coordinates, date, and calculation parameters.
+To get prayer times, initialize a new `PrayerTimes` object passing in coordinates, date, and calculation parameters. The fields in this are `kotlinx.datetime.Instant` in UTC that can be converted to the wanted timezone.
 
-```java
-PrayerTimes prayerTimes = new PrayerTimes(coordinates, date, params);
+```kotlin
+val prayerTimes = PrayerTimes(coordinates, dateComponents, parameters)
 ```
 
 ### Initialization parameters
@@ -42,28 +34,25 @@ PrayerTimes prayerTimes = new PrayerTimes(coordinates, date, params);
 
 Create a `Coordinates` object with the latitude and longitude for the location you want prayer times for.
 
-```java
-Coordinates coordinates = new Coordinates(35.78056, -78.6389);
+```kotlin
+val coordinates = Coordinates(35.78056, -78.6389);
 ```
 
 #### Date
 
 The date parameter passed in should be an instance of the `DateComponents` object. The year, month, and day values need to be populated. All other values will be ignored. The year, month and day values should be for the  local date that you want prayer times for. These date values are expected to be for the Gregorian calendar. There's also a convenience method for converting a `java.util.Date` to `DateComponents`.
 
-```java
-DateComponents date = new DateComponents(2015, 11, 1);
-DateComponents date = DateComponents.from(new Date());
+```kotlin
+val date = DateComponents(2015, 11, 1);
 ```
 
 #### Calculation parameters
 
 The rest of the needed information is contained within the `CalculationParameters` class. Instead of manually initializing this class, it is recommended to use one of the pre-populated instances in the `CalculationMethod` class. You can then further customize the calculation parameters if needed.
 
-```java
-CalculationParameters params =
-     CalculationMethod.MUSLIM_WORLD_LEAGUE.getParameters();
-params.madhab = Madhab.HANAFI;
-params.adjustments.fajr = 2;
+```kotlin
+val params = CalculationMethod.MUSLIM_WORLD_LEAGUE.parameters
+  .copy(madhab = Madhab.HANAFI, prayerAdjustments = PrayerAdjustments(fajr = 2))
 ```
 
 | Parameter | Description |
@@ -113,28 +102,28 @@ params.adjustments.fajr = 2;
 
 Once the `PrayerTimes` object has been initialized it will contain values for all five prayer times and the time for sunrise. The prayer times will be  Date object instances initialized with UTC values. To display these times for the local timezone, a formatting and timezone conversion formatter should be used, for example `java.text.SimpleDateFormat`.
 
-```java
-SimpleDateFormat formatter = new SimpleDateFormat("hh:mm a");
-formatter.setTimeZone(TimeZone.getTimeZone("America/New_York"));
-formatter.format(prayerTimes.fajr);
+```kotlin
+val formatter = SimpleDateFormat("hh:mm a")
+formatter.setTimeZone(TimeZone.getTimeZone("America/New_York"))
+formatter.format(Date(prayerTimes.fajr.toEpochMilliseconds()))
 ```
 
 ### Qibla
 
 As of version 1.1.0, this library provides a `Qibla` class for getting the qibla for a given location.
 
-```java
-Coordinates coordinates = new Coordinates(latitude, longitude);
-Qibla qibla = new Qibla(coordinates);
+```kotlin
+val coordinates = Coordinates(latitude, longitude);
+val qibla = Qibla(coordinates);
 // qibla.direction is the qibla direction
 ```
 
 ### SunnahTimes
 
-In version 1.2.0, the library provides a `SunnahTimes` class.
+The library provides a `SunnahTimes` class.
 
-```java
-SunnahTimes sunnahTimes = new SunnahTimes(prayerTimes);
+```kotlin
+val sunnahTimes = SunnahTimes(prayerTimes);
 // sunnahTimes.middleOfTheNight is the midpoint between Maghrib and Fajr
 // sunnahTimes.lastThirdOfTheNight is the last third between Maghrib and Fajr
 ```

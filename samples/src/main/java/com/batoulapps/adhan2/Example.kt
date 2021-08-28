@@ -17,7 +17,6 @@ object Example {
     val dateComponents: DateComponents = DateComponents.from(System.now())
     val parameters: CalculationParameters = CalculationMethod.UMM_AL_QURA.parameters
 
-
     val prayerTimes = PrayerTimes(coordinates, dateComponents, parameters)
 
     val formatter = SimpleDateFormat("hh:mm a")
