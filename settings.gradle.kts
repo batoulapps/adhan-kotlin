@@ -8,3 +8,4 @@ pluginManagement {
 }
 rootProject.name = "Adhan"
 include(":adhan")
+include(":samples")
