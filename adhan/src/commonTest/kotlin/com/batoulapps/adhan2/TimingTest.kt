@@ -27,7 +27,6 @@ import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import okio.ExperimentalFileSystem
 import okio.Path.Companion.toPath
 import kotlin.math.abs
 import kotlin.test.Test
@@ -35,7 +34,6 @@ import kotlin.test.assertTrue
 
 class TimingTest {
 
-  @ExperimentalFileSystem
   @Test
   fun testTimes() {
     val json = Json { ignoreUnknownKeys = true }

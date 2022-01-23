@@ -1,6 +1,8 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.5.21"
+    kotlin("plugin.serialization") version "1.6.10"
     id("maven-publish")
     id("signing")
 }
@@ -23,24 +25,28 @@ kotlin {
         }
     }
 
-    val onPhone = System.getenv("SDK_NAME")?.startsWith("iphoneos") ?: false
-    if (onPhone) {
-        iosArm64("ios")
-    } else {
-        iosX64("ios")
-    }
+    ios()
+    iosSimulatorArm64()
+    val iosMain by sourceSets.getting
+    val iosTest by sourceSets.getting
+    val iosSimulatorArm64Main by sourceSets.getting
+    val iosSimulatorArm64Test by sourceSets.getting
+
+    iosSimulatorArm64Main.dependsOn(iosMain)
+    iosSimulatorArm64Test.dependsOn(iosTest)
+
     macosX64("macOS")
 
     sourceSets["commonMain"].dependencies {
         implementation("org.jetbrains.kotlin:kotlin-stdlib")
-        api("org.jetbrains.kotlinx:kotlinx-datetime:0.2.1")
+        api("org.jetbrains.kotlinx:kotlinx-datetime:0.3.2")
     }
 
     sourceSets["commonTest"].dependencies {
         implementation(kotlin("test-common"))
         implementation(kotlin("test-annotations-common"))
-        api("com.squareup.okio:okio-multiplatform:3.0.0-alpha.9")
-        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
+        api("com.squareup.okio:okio:3.0.0")
+        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
     }
 
     sourceSets["jvmTest"].dependencies {
