@@ -11,53 +11,65 @@ group = "com.batoulapps.adhan"
 version = property("version") ?: ""
 
 kotlin {
-    jvm {
-        val main by compilations.getting {
-            kotlinOptions {
-                jvmTarget = "1.8"
-            }
-        }
+    jvm()
 
-        val test by compilations.getting {
-            kotlinOptions {
-                jvmTarget = "1.8"
-            }
-        }
+    js(IR) {
+       useCommonJs()
+       browser()
     }
+
+    linuxX64("linux")
 
     ios()
     iosSimulatorArm64()
-    val iosMain by sourceSets.getting
-    val iosTest by sourceSets.getting
-    val iosSimulatorArm64Main by sourceSets.getting
-    val iosSimulatorArm64Test by sourceSets.getting
 
-    iosSimulatorArm64Main.dependsOn(iosMain)
-    iosSimulatorArm64Test.dependsOn(iosTest)
+    macosArm64("macOS")
+    macosX64("macOSX64")
 
-    macosX64("macOS")
+    watchos()
+    watchosSimulatorArm64()
 
-    sourceSets["commonMain"].dependencies {
-        implementation("org.jetbrains.kotlin:kotlin-stdlib")
-        api("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
-    }
-
-    sourceSets["commonTest"].dependencies {
-        implementation(kotlin("test-common"))
-        implementation(kotlin("test-annotations-common"))
-        api("com.squareup.okio:okio:3.2.0")
-        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
-    }
-
-    sourceSets["jvmTest"].dependencies {
-        dependencies {
-            implementation(kotlin("test-junit"))
-            implementation("junit:junit:4.13.2")
-            implementation(kotlin("stdlib-jdk8"))
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlin:kotlin-stdlib")
+                api("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+            }
         }
-    }
 
-    sourceSets["iosTest"].dependencies {  }
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test-common"))
+                implementation(kotlin("test-annotations-common"))
+                api("com.squareup.okio:okio:3.2.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+            }
+        }
+
+        val jvmTest by getting {
+            dependencies {
+                implementation(kotlin("test-junit"))
+                implementation("junit:junit:4.13.2")
+                implementation(kotlin("stdlib-jdk8"))
+            }
+        }
+
+        val jsTest by getting {
+            dependencies {
+                implementation(kotlin("test-js"))
+                implementation("com.squareup.okio:okio-nodefilesystem:3.2.0")
+            }
+        }
+
+        val appleTest by creating { dependsOn(commonTest) }
+        val iosTest by getting { dependsOn(appleTest) }
+        val watchosTest by getting { dependsOn(appleTest) }
+
+        sourceSets["macOSTest"].dependsOn(appleTest)
+        sourceSets["macOSX64Test"].dependsOn(appleTest)
+        sourceSets["iosSimulatorArm64Test"].dependsOn(appleTest)
+        sourceSets["watchosSimulatorArm64Test"].dependsOn(appleTest)
+    }
 }
 
 // taken from here with minor modifications:
