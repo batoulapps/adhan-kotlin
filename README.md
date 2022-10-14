@@ -15,7 +15,7 @@ This branch is for the Kotlin Multiplatform version. There is also a branch for 
 ### Gradle
 
 ```
-implementation("com.batoulapps.adhan2:adhan:0.0.3")
+implementation("com.batoulapps.adhan2:adhan:0.0.4")
 ```
 
 **Note** - on Android, [kotlinx.datetime](https://github.com/Kotlin/kotlinx-datetime) uses `java.time`, which needs either a minimum api level of 26, or enabling of `coreLibraryDesugaring` as per the instructions [here](https://developer.android.com/studio/write/java8-support#library-desugaring).
