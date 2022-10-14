@@ -18,13 +18,14 @@ kotlin {
        browser()
     }
 
-    linuxX64("linux")
+    linuxX64()
+    mingwX64()
 
     ios()
     iosSimulatorArm64()
 
-    macosArm64("macOS")
-    macosX64("macOSX64")
+    macosArm64()
+    macosX64()
 
     watchos()
     watchosSimulatorArm64()
@@ -65,10 +66,15 @@ kotlin {
         val iosTest by getting { dependsOn(appleTest) }
         val watchosTest by getting { dependsOn(appleTest) }
 
-        sourceSets["macOSTest"].dependsOn(appleTest)
-        sourceSets["macOSX64Test"].dependsOn(appleTest)
+        sourceSets["macosArm64Test"].dependsOn(appleTest)
+        sourceSets["macosX64Test"].dependsOn(appleTest)
         sourceSets["iosSimulatorArm64Test"].dependsOn(appleTest)
         sourceSets["watchosSimulatorArm64Test"].dependsOn(appleTest)
+
+        val nativeTest by creating { dependsOn(commonTest) }
+
+        sourceSets["linuxX64Test"].dependsOn(nativeTest)
+        sourceSets["mingwX64Test"].dependsOn(nativeTest)
     }
 }
 
