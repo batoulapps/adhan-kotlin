@@ -1,5 +1,10 @@
 # Changelog
 
+## version 0.0.4
+- support macOS arm64, Linux X64, Windows X64, JS, and watchOS 
+- update to Kotlin 1.7.10
+- update kotlinx-datetime to 0.4.0
+
 ## version 0.0.3
 - update to Kotlin 1.6.10
 - support for Apple Silicon simulators
