@@ -13,6 +13,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         version: [11, 17]
     steps:
@@ -31,6 +32,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         version: [11, 17]
     steps:
