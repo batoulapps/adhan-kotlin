@@ -26,7 +26,7 @@ jobs:
     - name: Set up Gradle
       uses: gradle/gradle-build-action@v2
     - name: Run test with Gradle Wrapper
-      run: ./gradlew test
+      run: ./gradlew --debug test
     - uses: codecov/codecov-action@v3
 
   build:
