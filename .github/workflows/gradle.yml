@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [11, 16, 17]
+        version: [11, 17]
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK ${{ matrix.version }}
@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [11, 16, 17]
+        version: [11, 17]
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK ${{ matrix.version }}
