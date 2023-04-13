@@ -23,10 +23,10 @@ jobs:
       with:
         java-version: ${{ matrix.version }}
         distribution: 'temurin'
-    - name: Test with Gradle
-      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
-      with:
-        arguments: test --stacktrace
+    - name: Set up Gradle
+      uses: gradle/gradle-build-action@v2
+    - name: Run test with Gradle Wrapper
+      run: ./gradlew test
     - uses: codecov/codecov-action@v3
 
   build:
@@ -42,7 +42,7 @@ jobs:
       with:
         java-version: ${{ matrix.version }}
         distribution: 'temurin'
-    - name: Build with Gradle
-      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
-      with:
-        arguments: build --stacktrace
+    - name: Set up Gradle
+      uses: gradle/gradle-build-action@v2
+    - name: Run build with Gradle Wrapper
+      run: ./gradlew build
