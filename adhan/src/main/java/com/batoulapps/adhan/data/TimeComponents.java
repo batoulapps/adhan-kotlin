@@ -36,6 +36,7 @@ public class TimeComponents {
     calendar.set(Calendar.MINUTE, minutes);
     calendar.set(Calendar.SECOND, seconds);
     calendar.add(Calendar.HOUR_OF_DAY, hours);
+    calendar.set(Calendar.MILLISECOND, 0);
     return calendar.getTime();
   }
 }

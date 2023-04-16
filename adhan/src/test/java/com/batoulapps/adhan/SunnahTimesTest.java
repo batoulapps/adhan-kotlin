@@ -15,18 +15,18 @@ public class SunnahTimesTest {
         final CalculationParameters params = CalculationMethod.NORTH_AMERICA.getParameters();
         final Coordinates coordinates = new Coordinates(35.7750, -78.6336);
 
-        final SimpleDateFormat formatter = new SimpleDateFormat("M/d/yy, h:mm a");
+        final SimpleDateFormat formatter = new SimpleDateFormat("M/d/yy, h:mm a, ss.SSS");
         formatter.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 
         final DateComponents todayComponents = new DateComponents(2015, 7, 12);
         final PrayerTimes todayPrayers = new PrayerTimes(coordinates, todayComponents, params);
 
-        assertThat(formatter.format(todayPrayers.maghrib)).isEqualTo("7/12/15, 8:32 PM");
+        assertThat(formatter.format(todayPrayers.maghrib)).isEqualTo("7/12/15, 8:32 PM, 00.000");
 
         final DateComponents tomorrowComponents = new DateComponents(2015, 7, 13);
         final PrayerTimes tomorrowPrayers = new PrayerTimes(coordinates, tomorrowComponents, params);
 
-        assertThat(formatter.format(tomorrowPrayers.fajr)).isEqualTo("7/13/15, 4:43 AM");
+        assertThat(formatter.format(tomorrowPrayers.fajr)).isEqualTo("7/13/15, 4:43 AM, 00.000");
 
         /*
          Night: 8:32 PM to 4:43 AM
@@ -35,8 +35,8 @@ public class SunnahTimesTest {
          Last Third = 8:32 PM + 5 hours, 27.3 minutes = 1:59:20 AM which rounds to 1:59 AM
         */
         final SunnahTimes sunnahTimes = new SunnahTimes(todayPrayers);
-        assertThat(formatter.format(sunnahTimes.middleOfTheNight)).isEqualTo("7/13/15, 12:38 AM");
-        assertThat(formatter.format(sunnahTimes.lastThirdOfTheNight)).isEqualTo("7/13/15, 1:59 AM");
+        assertThat(formatter.format(sunnahTimes.middleOfTheNight)).isEqualTo("7/13/15, 12:38 AM, 00.000");
+        assertThat(formatter.format(sunnahTimes.lastThirdOfTheNight)).isEqualTo("7/13/15, 1:59 AM, 00.000");
     }
 
     @Test
@@ -44,18 +44,18 @@ public class SunnahTimesTest {
         final CalculationParameters params = CalculationMethod.MOON_SIGHTING_COMMITTEE.getParameters();
         final Coordinates coordinates = new Coordinates(51.5074, -0.1278);
 
-        final SimpleDateFormat formatter = new SimpleDateFormat("M/d/yy, h:mm a");
+        final SimpleDateFormat formatter = new SimpleDateFormat("M/d/yy, h:mm a, ss.SSS");
         formatter.setTimeZone(TimeZone.getTimeZone("Europe/London"));
 
         final DateComponents todayComponents = new DateComponents(2016, 12, 31);
         final PrayerTimes todayPrayers = new PrayerTimes(coordinates, todayComponents, params);
 
-        assertThat(formatter.format(todayPrayers.maghrib)).isEqualTo("12/31/16, 4:04 PM");
+        assertThat(formatter.format(todayPrayers.maghrib)).isEqualTo("12/31/16, 4:04 PM, 00.000");
 
         final DateComponents tomorrowComponents = new DateComponents(2017, 1, 1);
         final PrayerTimes tomorrowPrayers = new PrayerTimes(coordinates, tomorrowComponents, params);
 
-        assertThat(formatter.format(tomorrowPrayers.fajr)).isEqualTo("1/1/17, 6:25 AM");
+        assertThat(formatter.format(tomorrowPrayers.fajr)).isEqualTo("1/1/17, 6:25 AM, 00.000");
 
         /*
          Night: 4:04 PM to 6:25 AM
@@ -64,8 +64,8 @@ public class SunnahTimesTest {
          Last Third = 4:04 PM + 9 hours, 34 minutes = 1:38 AM
         */
         final SunnahTimes sunnahTimes = new SunnahTimes(todayPrayers);
-        assertThat(formatter.format(sunnahTimes.middleOfTheNight)).isEqualTo("12/31/16, 11:15 PM");
-        assertThat(formatter.format(sunnahTimes.lastThirdOfTheNight)).isEqualTo("1/1/17, 1:38 AM");
+        assertThat(formatter.format(sunnahTimes.middleOfTheNight)).isEqualTo("12/31/16, 11:15 PM, 00.000");
+        assertThat(formatter.format(sunnahTimes.lastThirdOfTheNight)).isEqualTo("1/1/17, 1:38 AM, 00.000");
     }
 
     @Test
@@ -75,18 +75,18 @@ public class SunnahTimesTest {
 
         final Coordinates coordinates = new Coordinates(59.9094, 10.7349);
 
-        final SimpleDateFormat formatter = new SimpleDateFormat("M/d/yy, h:mm a");
+        final SimpleDateFormat formatter = new SimpleDateFormat("M/d/yy, h:mm a, ss.SSS");
         formatter.setTimeZone(TimeZone.getTimeZone("Europe/Oslo"));
 
         final DateComponents todayComponents = new DateComponents(2016, 7, 1);
         final PrayerTimes todayPrayers = new PrayerTimes(coordinates, todayComponents, params);
 
-        assertThat(formatter.format(todayPrayers.maghrib)).isEqualTo("7/1/16, 10:41 PM");
+        assertThat(formatter.format(todayPrayers.maghrib)).isEqualTo("7/1/16, 10:41 PM, 00.000");
 
         final DateComponents tomorrowComponents = new DateComponents(2016, 7, 2);
         final PrayerTimes tomorrowPrayers = new PrayerTimes(coordinates, tomorrowComponents, params);
 
-        assertThat(formatter.format(tomorrowPrayers.fajr)).isEqualTo("7/2/16, 1:20 AM");
+        assertThat(formatter.format(tomorrowPrayers.fajr)).isEqualTo("7/2/16, 1:20 AM, 00.000");
 
         /*
          Night: 10:41 PM to 1:20 AM
@@ -95,8 +95,8 @@ public class SunnahTimesTest {
          Last Third = 10:41 PM + 1 hours, 46 minutes = 12:27 AM
         */
         final SunnahTimes sunnahTimes = new SunnahTimes(todayPrayers);
-        assertThat(formatter.format(sunnahTimes.middleOfTheNight)).isEqualTo("7/2/16, 12:01 AM");
-        assertThat(formatter.format(sunnahTimes.lastThirdOfTheNight)).isEqualTo("7/2/16, 12:27 AM");
+        assertThat(formatter.format(sunnahTimes.middleOfTheNight)).isEqualTo("7/2/16, 12:01 AM, 00.000");
+        assertThat(formatter.format(sunnahTimes.lastThirdOfTheNight)).isEqualTo("7/2/16, 12:27 AM, 00.000");
     }
 
     @Test
@@ -104,20 +104,20 @@ public class SunnahTimesTest {
         final CalculationParameters params = CalculationMethod.NORTH_AMERICA.getParameters();
         final Coordinates coordinates = new Coordinates(37.7749, -122.4194);
 
-        final SimpleDateFormat formatter = new SimpleDateFormat("M/d/yy, h:mm a");
+        final SimpleDateFormat formatter = new SimpleDateFormat("M/d/yy, h:mm a, ss.SSS");
         formatter.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
 
         final DateComponents todayComponents = new DateComponents(2017, 3, 11);
         final PrayerTimes todayPrayers = new PrayerTimes(coordinates, todayComponents, params);
 
-        assertThat(formatter.format(todayPrayers.fajr)).isEqualTo("3/11/17, 5:14 AM");
-        assertThat(formatter.format(todayPrayers.maghrib)).isEqualTo("3/11/17, 6:13 PM");
+        assertThat(formatter.format(todayPrayers.fajr)).isEqualTo("3/11/17, 5:14 AM, 00.000");
+        assertThat(formatter.format(todayPrayers.maghrib)).isEqualTo("3/11/17, 6:13 PM, 00.000");
 
         final DateComponents tomorrowComponents = new DateComponents(2017, 3, 12);
         final PrayerTimes tomorrowPrayers = new PrayerTimes(coordinates, tomorrowComponents, params);
 
-        assertThat(formatter.format(tomorrowPrayers.fajr)).isEqualTo("3/12/17, 6:13 AM");
-        assertThat(formatter.format(tomorrowPrayers.maghrib)).isEqualTo("3/12/17, 7:14 PM");
+        assertThat(formatter.format(tomorrowPrayers.fajr)).isEqualTo("3/12/17, 6:13 AM, 00.000");
+        assertThat(formatter.format(tomorrowPrayers.maghrib)).isEqualTo("3/12/17, 7:14 PM, 00.000");
 
         /*
          Night: 6:13 PM PST to 6:13 AM PDT
@@ -126,8 +126,8 @@ public class SunnahTimesTest {
          Last Third = 6:13 PM + 7 hours, 20 minutes = 1:33 AM
         */
         final SunnahTimes sunnahTimes = new SunnahTimes(todayPrayers);
-        assertThat(formatter.format(sunnahTimes.middleOfTheNight)).isEqualTo("3/11/17, 11:43 PM");
-        assertThat(formatter.format(sunnahTimes.lastThirdOfTheNight)).isEqualTo("3/12/17, 1:33 AM");
+        assertThat(formatter.format(sunnahTimes.middleOfTheNight)).isEqualTo("3/11/17, 11:43 PM, 00.000");
+        assertThat(formatter.format(sunnahTimes.lastThirdOfTheNight)).isEqualTo("3/12/17, 1:33 AM, 00.000");
     }
 
     @Test
@@ -136,20 +136,20 @@ public class SunnahTimesTest {
         params.highLatitudeRule = HighLatitudeRule.SEVENTH_OF_THE_NIGHT;
         final Coordinates coordinates = new Coordinates(48.8566, 2.3522);
 
-        final SimpleDateFormat formatter = new SimpleDateFormat("M/d/yy, h:mm a");
+        final SimpleDateFormat formatter = new SimpleDateFormat("M/d/yy, h:mm a, ss.SSS");
         formatter.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
 
         final DateComponents todayComponents = new DateComponents(2015, 10, 24);
         final PrayerTimes todayPrayers = new PrayerTimes(coordinates, todayComponents, params);
 
-        assertThat(formatter.format(todayPrayers.fajr)).isEqualTo("10/24/15, 6:38 AM");
-        assertThat(formatter.format(todayPrayers.maghrib)).isEqualTo("10/24/15, 6:45 PM");
+        assertThat(formatter.format(todayPrayers.fajr)).isEqualTo("10/24/15, 6:38 AM, 00.000");
+        assertThat(formatter.format(todayPrayers.maghrib)).isEqualTo("10/24/15, 6:45 PM, 00.000");
 
         final DateComponents tomorrowComponents = new DateComponents(2015, 10, 25);
         final PrayerTimes tomorrowPrayers = new PrayerTimes(coordinates, tomorrowComponents, params);
 
-        assertThat(formatter.format(tomorrowPrayers.fajr)).isEqualTo("10/25/15, 5:40 AM");
-        assertThat(formatter.format(tomorrowPrayers.maghrib)).isEqualTo("10/25/15, 5:43 PM");
+        assertThat(formatter.format(tomorrowPrayers.fajr)).isEqualTo("10/25/15, 5:40 AM, 00.000");
+        assertThat(formatter.format(tomorrowPrayers.maghrib)).isEqualTo("10/25/15, 5:43 PM, 00.000");
 
         /*
 	     Night: 6:45 PM CEST to 5:40 AM CET
@@ -158,7 +158,7 @@ public class SunnahTimesTest {
          Last Third = 6:45 PM + 7 hours, 56 minutes, 40 seconds = 2:41:40 AM which rounds to 2:42 AM
         */
         final SunnahTimes sunnahTimes = new SunnahTimes(todayPrayers);
-        assertThat(formatter.format(sunnahTimes.middleOfTheNight)).isEqualTo("10/25/15, 12:43 AM");
-        assertThat(formatter.format(sunnahTimes.lastThirdOfTheNight)).isEqualTo("10/25/15, 2:42 AM");
+        assertThat(formatter.format(sunnahTimes.middleOfTheNight)).isEqualTo("10/25/15, 12:43 AM, 00.000");
+        assertThat(formatter.format(sunnahTimes.lastThirdOfTheNight)).isEqualTo("10/25/15, 2:42 AM, 00.000");
     }
 }
