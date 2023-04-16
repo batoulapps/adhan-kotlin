@@ -1,8 +1,6 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.7.10"
+    kotlin("plugin.serialization") version "1.8.20"
     id("maven-publish")
     id("signing")
 }
@@ -14,8 +12,13 @@ kotlin {
     jvm()
 
     js(IR) {
-       useCommonJs()
-       browser()
+        nodejs {
+            testTask {
+                useMocha {
+                    timeout = "30s"
+                }
+            }
+        }
     }
 
     linuxX64()
@@ -42,7 +45,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                api("com.squareup.okio:okio:3.2.0")
+                api("com.squareup.okio:okio:3.3.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
             }
         }
@@ -58,7 +61,8 @@ kotlin {
         val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
-                implementation("com.squareup.okio:okio-nodefilesystem:3.2.0")
+                implementation("com.squareup.okio:okio-nodefilesystem:3.3.0")
+                implementation(npm("@js-joda/timezone", "2.3.0"))
             }
         }
 
