@@ -87,11 +87,19 @@ kotlin {
 // planning on moving this to a plugin one day.
 
 // Stub secrets to let the project sync and build without the publication values set up
-ext["signing.keyId"] = project.property("signing.keyId")
-ext["signing.password"] = project.property("signing.password")
-ext["signing.secretKeyRingFile"] = project.property("signing.secretKeyRingFile")
-ext["ossrhUsername"] = project.property("mavenCentralRepositoryUsername")
-ext["ossrhPassword"] = project.property("mavenCentralRepositoryPassword")
+fun propertyOrEmpty(name: String): String {
+    return if (project.hasProperty(name)) {
+        project.property(name).toString()
+    } else {
+        ""
+    }
+}
+
+ext["signing.keyId"] = propertyOrEmpty("signing.keyId")
+ext["signing.password"] = propertyOrEmpty("signing.password")
+ext["signing.secretKeyRingFile"] = propertyOrEmpty("signing.secretKeyRingFile")
+ext["ossrhUsername"] = propertyOrEmpty("mavenCentralRepositoryUsername")
+ext["ossrhPassword"] = propertyOrEmpty("mavenCentralRepositoryPassword")
 
 val javadocJar by tasks.registering(Jar::class) {
     archiveClassifier.set("javadoc")

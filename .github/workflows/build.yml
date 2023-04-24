@@ -1,4 +1,4 @@
-name: Java CI with Gradle
+name: KMP Pull Request
 
 on:
   push:
@@ -12,46 +12,23 @@ permissions:
 jobs:
 
   validate:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ macOS-latest, ubuntu-latest ]
+
+    runs-on: ${{matrix.os}}
     steps:
       - uses: actions/checkout@v3
-      - uses: gradle/wrapper-validation-action@v1
-      
-  test:
-    runs-on: ubuntu-latest
-    needs: validate
-    strategy:
-      fail-fast: false
-      matrix:
-        version: [11, 17]
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK ${{ matrix.version }}
-      uses: actions/setup-java@v3
-      with:
-        java-version: ${{ matrix.version }}
-        distribution: 'temurin'
-    - name: Set up Gradle
-      uses: gradle/gradle-build-action@v2
-    - name: Run test with Gradle Wrapper
-      run: ./gradlew test
-    - uses: codecov/codecov-action@v3
-
-  build:
-    runs-on: ubuntu-latest
-    needs: validate
-    strategy:
-      fail-fast: false
-      matrix:
-        version: [11, 17]
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK ${{ matrix.version }}
-      uses: actions/setup-java@v3
-      with:
-        java-version: ${{ matrix.version }}
-        distribution: 'temurin'
-    - name: Set up Gradle
-      uses: gradle/gradle-build-action@v2
-    - name: Run build with Gradle Wrapper
-      run: ./gradlew build
+      - name: Set up JDK ${{ matrix.version }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'zulu'
+      - name: Run tests for Linux, JVM, and Javascript
+        if: matrix.os == 'ubuntu-latest'
+        run: ./gradlew linuxX64Test jvmTest jsTest
+      - name: Run test on iOS
+        if: matrix.os == 'macOS-latest'
+        run: ./gradlew iosX64Test macOSX64Test
+      - uses: codecov/codecov-action@v3
+        if: matrix.os == 'ubuntu-latest'
