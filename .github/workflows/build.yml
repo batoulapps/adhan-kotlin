@@ -1,0 +1,34 @@
+name: KMP Pull Request
+
+on:
+  push:
+    branches: [ "kotlin_multiplatform" ]
+  pull_request:
+    branches: [ "kotlin_multiplatform" ]
+
+permissions:
+  contents: read
+
+jobs:
+
+  validate:
+    strategy:
+      matrix:
+        os: [ macOS-latest, ubuntu-latest ]
+
+    runs-on: ${{matrix.os}}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK ${{ matrix.version }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'zulu'
+      - name: Run tests for Linux, JVM, and Javascript
+        if: matrix.os == 'ubuntu-latest'
+        run: ./gradlew linuxX64Test jvmTest jsTest
+      - name: Run test on iOS
+        if: matrix.os == 'macOS-latest'
+        run: ./gradlew iosX64Test macOSX64Test
+      - uses: codecov/codecov-action@v3
+        if: matrix.os == 'ubuntu-latest'
