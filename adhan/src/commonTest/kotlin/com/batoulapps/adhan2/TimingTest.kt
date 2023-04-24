@@ -20,6 +20,9 @@ import com.batoulapps.adhan2.data.DateComponents
 import com.batoulapps.adhan2.data.TimingFile
 import com.batoulapps.adhan2.data.TimingParameters
 import com.batoulapps.adhan2.internal.TestUtils.getDateComponents
+import kotlin.math.abs
+import kotlin.test.Test
+import kotlin.test.assertTrue
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -28,23 +31,19 @@ import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import okio.Path.Companion.toPath
-import kotlin.math.abs
-import kotlin.test.Test
-import kotlin.test.assertTrue
 
 class TimingTest {
 
   @Test
   fun testTimes() {
     val json = Json { ignoreUnknownKeys = true }
-    val fs = TestUtil().fileSystem()
+    val testUtil = TestUtil()
 
-    val jsonPath = "../Shared/Times/".toPath()
-    if (!fs.exists(jsonPath)) {
-      // skip this test on iOS for now - should consider doing this via expect
-      // and actual to avoid risking this not running on jvm, macOS, and others
-      return
-    }
+    val root = (testUtil.environmentVariable("ADHAN_ROOT") ?: "").toPath()
+    val fs = testUtil.fileSystem()
+
+    val jsonPath = root.resolve("Shared/Times/")
+    assertTrue(fs.exists(jsonPath), "Json Path Does not Exist: $jsonPath")
 
     val dir = fs.list(jsonPath)
     dir.forEach { path ->
