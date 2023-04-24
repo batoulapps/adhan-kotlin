@@ -1,3 +1,7 @@
+import org.jetbrains.kotlin.gradle.targets.jvm.tasks.KotlinJvmTest
+import org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest
+import org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest
+
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization") version "1.8.20"
@@ -79,6 +83,22 @@ kotlin {
 
         sourceSets["linuxX64Test"].dependsOn(nativeTest)
         sourceSets["mingwX64Test"].dependsOn(nativeTest)
+    }
+
+    // set an environment variable and read it in the test
+    // https://publicobject.com/2023/04/16/read-a-project-file-in-a-kotlin-multiplatform-test/
+    tasks.withType<KotlinJvmTest>().configureEach {
+        environment("ADHAN_ROOT", rootDir)
+    }
+
+    tasks.withType<KotlinNativeTest>().configureEach {
+        // required for the variable to propagate to the simulator
+        environment("SIMCTL_CHILD_ADHAN_ROOT", rootDir)
+        environment("ADHAN_ROOT", rootDir)
+    }
+
+    tasks.withType<KotlinJsTest>().configureEach {
+        environment("ADHAN_ROOT", rootDir.toString())
     }
 }
 
