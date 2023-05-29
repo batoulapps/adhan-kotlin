@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest
 
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.8.20"
+    kotlin("plugin.serialization") version "1.8.21"
     id("maven-publish")
     id("signing")
 }
@@ -191,4 +191,9 @@ publishing {
 // Signing artifacts. Signing.* extra properties values will be used
 signing {
     sign(publishing.publications)
+}
+
+// TODO: remove after https://youtrack.jetbrains.com/issue/KT-46466 is fixed
+project.tasks.withType(AbstractPublishToMaven::class.java).configureEach {
+    dependsOn(project.tasks.withType(Sign::class.java))
 }
