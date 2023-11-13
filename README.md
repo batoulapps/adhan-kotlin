@@ -8,7 +8,7 @@ All astronomical calculations are high precision equations directly from the boo
 
 Implementations of Adhan in other languages can be found in the parent repo [Adhan](https://github.com/batoulapps/Adhan).
 
-This branch is for the Kotlin Multiplatform version. There is also a branch for a pure Java version of the library.
+All primary development is for the Kotlin Multiplatform version. There is also a [branch for a pure Java version](https://github.com/batoulapps/adhan-kotlin/tree/java) of the library.
 
 ## Usage
 

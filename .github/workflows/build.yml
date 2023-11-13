@@ -2,9 +2,9 @@ name: KMP Pull Request
 
 on:
   push:
-    branches: [ "kotlin_multiplatform" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "kotlin_multiplatform" ]
+    branches: [ "main" ]
 
 permissions:
   contents: read
