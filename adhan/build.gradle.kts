@@ -1,10 +1,12 @@
 import org.jetbrains.kotlin.gradle.targets.jvm.tasks.KotlinJvmTest
 import org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest
 import org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.8.21"
+    kotlin("plugin.serialization") version "1.9.20"
     id("maven-publish")
     id("signing")
 }
@@ -26,22 +28,25 @@ kotlin {
     }
 
     linuxX64()
+    linuxArm64()
     mingwX64()
 
-    ios()
+    iosX64()
+    iosArm64()
     iosSimulatorArm64()
 
     macosArm64()
     macosX64()
 
-    watchos()
+    watchosX64()
+    watchosArm64()
     watchosSimulatorArm64()
 
     sourceSets {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlin:kotlin-stdlib")
-                api("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+                api("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
             }
         }
 
@@ -49,8 +54,8 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                api("com.squareup.okio:okio:3.3.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
+                api("com.squareup.okio:okio:3.6.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
             }
         }
 
@@ -65,24 +70,10 @@ kotlin {
         val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
-                implementation("com.squareup.okio:okio-nodefilesystem:3.3.0")
+                implementation("com.squareup.okio:okio-nodefilesystem:3.6.0")
                 implementation(npm("@js-joda/timezone", "2.3.0"))
             }
         }
-
-        val appleTest by creating { dependsOn(commonTest) }
-        val iosTest by getting { dependsOn(appleTest) }
-        val watchosTest by getting { dependsOn(appleTest) }
-
-        sourceSets["macosArm64Test"].dependsOn(appleTest)
-        sourceSets["macosX64Test"].dependsOn(appleTest)
-        sourceSets["iosSimulatorArm64Test"].dependsOn(appleTest)
-        sourceSets["watchosSimulatorArm64Test"].dependsOn(appleTest)
-
-        val nativeTest by creating { dependsOn(commonTest) }
-
-        sourceSets["linuxX64Test"].dependsOn(nativeTest)
-        sourceSets["mingwX64Test"].dependsOn(nativeTest)
     }
 
     // set an environment variable and read it in the test
@@ -188,12 +179,14 @@ publishing {
     }
 }
 
+// auto replace yarn.lock
+rootProject.plugins.withType(org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin::class.java) {
+    rootProject.the<YarnRootExtension>().yarnLockMismatchReport =
+        YarnLockMismatchReport.WARNING
+    rootProject.the<YarnRootExtension>().yarnLockAutoReplace = true
+}
+
 // Signing artifacts. Signing.* extra properties values will be used
 signing {
     sign(publishing.publications)
-}
-
-// TODO: remove after https://youtrack.jetbrains.com/issue/KT-46466 is fixed
-project.tasks.withType(AbstractPublishToMaven::class.java).configureEach {
-    dependsOn(project.tasks.withType(Sign::class.java))
 }
