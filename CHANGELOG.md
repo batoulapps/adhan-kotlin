@@ -1,5 +1,14 @@
 # Changelog
 
+## development
+- update Kotlin to 1.9.20
+- new target: Linux arm64
+- support Turkish Diyanet method
+- support Shafaq parameter
+- support rounding, and update Singapore method to use up rounding
+- update test data to [d418fb3](https://github.com/batoulapps/adhan-testdata/commit/d418fb37b3d011af5594e344c06c0e5616db2a5c).
+- add a plethora of tests
+
 ## version 0.0.4
 - support macOS arm64, Linux X64, Windows X64, JS, and watchOS 
 - update to Kotlin 1.7.10

@@ -9,7 +9,7 @@ import kotlin.math.abs
 import kotlin.math.atan
 import kotlin.math.tan
 
-class SolarTime(today: DateComponents, coordinates: Coordinates) {
+class SolarTime(date: DateComponents, coordinates: Coordinates) {
   val transit: Double
   val sunrise: Double
   val sunset: Double
@@ -20,27 +20,8 @@ class SolarTime(today: DateComponents, coordinates: Coordinates) {
   private val nextSolar: SolarCoordinates
   private val approximateTransit: Double
 
-  fun hourAngle(angle: Double, afterTransit: Boolean): Double {
-    return correctedHourAngle(
-      approximateTransit, angle, observer,
-      afterTransit, solar.apparentSiderealTime, solar.rightAscension,
-      prevSolar.rightAscension, nextSolar.rightAscension, solar.declination,
-      prevSolar.declination, nextSolar.declination
-    )
-  }
-
-  // hours from transit
-  fun afternoon(shadowLength: ShadowLength): Double {
-    // TODO (from Swift version) source shadow angle calculation
-    val tangent: Double = abs(observer.latitude - solar.declination)
-    val inverse: Double =
-      shadowLength.shadowLength + tan(tangent.toRadians())
-    val angle: Double = atan(1.0 / inverse).toDegrees()
-    return hourAngle(angle, true)
-  }
-
   init {
-    val julianDate = CalendricalHelper.julianDay(today.year, today.month, today.day)
+    val julianDate = CalendricalHelper.julianDay(date.year, date.month, date.day)
     prevSolar = SolarCoordinates(julianDate - 1)
     solar = SolarCoordinates(julianDate)
     nextSolar = SolarCoordinates(julianDate + 1)
@@ -67,5 +48,24 @@ class SolarTime(today: DateComponents, coordinates: Coordinates) {
       prevSolar.rightAscension, nextSolar.rightAscension, solar.declination,
       prevSolar.declination, nextSolar.declination
     )
+  }
+
+  fun timeForSolarAngle(angle: Double, afterTransit: Boolean): Double {
+    return correctedHourAngle(
+      approximateTransit, angle, coordinates = observer,
+      afterTransit, solar.apparentSiderealTime, solar.rightAscension,
+      prevSolar.rightAscension, nextSolar.rightAscension, solar.declination,
+      prevSolar.declination, nextSolar.declination
+    )
+  }
+
+  // hours from transit
+  fun afternoon(shadowLength: ShadowLength): Double {
+    // TODO (from Swift version) source shadow angle calculation
+    val tangent: Double = abs(observer.latitude - solar.declination)
+    val inverse: Double =
+      shadowLength.shadowLength + tan(tangent.toRadians())
+    val angle: Double = atan(1.0 / inverse).toDegrees()
+    return timeForSolarAngle(angle, true)
   }
 }

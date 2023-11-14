@@ -57,14 +57,17 @@ internal class SolarCoordinates(julianDay: Double) {
         T,  /* meanObliquityOfTheEcliptic */ε0
       ).toRadians()
 
-    /* Equation from Astronomical Algorithms page 165 */declination =
+    /* Equation from Astronomical Algorithms page 165 */
+    declination =
       asin(sin(εapp) * sin(λ)).toDegrees()
 
-    /* Equation from Astronomical Algorithms page 165 */rightAscension = unwindAngle(
+    /* Equation from Astronomical Algorithms page 165 */
+    rightAscension = unwindAngle(
       atan2(cos(εapp) * sin(λ), cos(λ)).toDegrees()
     )
 
-    /* Equation from Astronomical Algorithms page 88 */apparentSiderealTime =
+    /* Equation from Astronomical Algorithms page 88 */
+    apparentSiderealTime =
       θ0 + ΔΨ * 3600 * cos((ε0 + Δε).toRadians()) / 3600
   }
 }
