@@ -1,5 +1,7 @@
 package com.batoulapps.adhan2
 
+import com.batoulapps.adhan2.model.Rounding
+
 /**
  * Standard calculation methods for calculating prayer times
  */
@@ -67,6 +69,12 @@ enum class CalculationMethod {
   SINGAPORE,
 
   /**
+   * Diyanet İşleri Başkanlığı, Turkey
+   * Uses a Fajr angle of 18 and an Isha angle of 17
+   */
+  TURKEY,
+
+  /**
    * The default value for [CalculationParameters.method] when initializing a
    * [CalculationParameters] object. Sets a Fajr angle of 0 and an Isha angle of 0.
    */
@@ -80,17 +88,17 @@ enum class CalculationMethod {
     get() = when (this) {
       MUSLIM_WORLD_LEAGUE -> {
         CalculationParameters(fajrAngle = 18.0, ishaAngle = 17.0, method = this,
-          methodAdjustments = PrayerAdjustments(0, 0, 1, 0, 0, 0)
+          methodAdjustments = PrayerAdjustments(dhuhr = 1)
         )
       }
       EGYPTIAN -> {
         CalculationParameters(fajrAngle = 19.5, ishaAngle = 17.5, method = this,
-          methodAdjustments = PrayerAdjustments(0, 0, 1, 0, 0, 0)
+          methodAdjustments = PrayerAdjustments(dhuhr = 1)
         )
       }
       KARACHI -> {
         CalculationParameters(fajrAngle = 18.0, ishaAngle = 18.0, method = this,
-          methodAdjustments = PrayerAdjustments(0, 0, 1, 0, 0, 0)
+          methodAdjustments = PrayerAdjustments(dhuhr = 1)
         )
       }
       UMM_AL_QURA -> {
@@ -98,17 +106,17 @@ enum class CalculationMethod {
       }
       DUBAI -> {
         CalculationParameters(fajrAngle = 18.2, ishaAngle = 18.2, method = this,
-          methodAdjustments = PrayerAdjustments(0, -3, 3, 3, 3, 0)
+          methodAdjustments = PrayerAdjustments(sunrise = -3, dhuhr = 3, asr = 3, maghrib = 3)
         )
       }
       MOON_SIGHTING_COMMITTEE -> {
         CalculationParameters(fajrAngle = 18.0, ishaAngle = 18.0, method = this,
-          methodAdjustments = PrayerAdjustments(0, 0, 5, 0, 3, 0)
+          methodAdjustments = PrayerAdjustments(dhuhr = 5, maghrib = 3)
         )
       }
       NORTH_AMERICA -> {
         CalculationParameters(fajrAngle = 15.0, ishaAngle = 15.0, method = this,
-          methodAdjustments = PrayerAdjustments(0, 0, 1, 0, 0, 0)
+          methodAdjustments = PrayerAdjustments(dhuhr = 1)
         )
       }
       KUWAIT -> {
@@ -119,7 +127,13 @@ enum class CalculationMethod {
       }
       SINGAPORE -> {
         CalculationParameters(fajrAngle = 20.0, ishaAngle = 18.0, method = this,
-          methodAdjustments = PrayerAdjustments(0, 0, 1, 0, 0, 0)
+          methodAdjustments = PrayerAdjustments(dhuhr = 1),
+          rounding = Rounding.UP
+        )
+      }
+      TURKEY -> {
+        CalculationParameters(fajrAngle = 18.0, ishaAngle = 17.0, method = this,
+          methodAdjustments = PrayerAdjustments(sunrise = -7, dhuhr = 5, asr = 4, maghrib = 7)
         )
       }
       OTHER -> {

@@ -174,9 +174,9 @@ class AstronomicalTest {
     val transit = solar.transit
     val sunrise = solar.sunrise
     val sunset = solar.sunset
-    val twilightStart = solar.hourAngle(-6.0,  /* afterTransit */false)
-    val twilightEnd = solar.hourAngle(-6.0,  /* afterTransit */true)
-    val invalid = solar.hourAngle(-36.0,  /* afterTransit */true)
+    val twilightStart = solar.timeForSolarAngle(-6.0,  /* afterTransit */false)
+    val twilightEnd = solar.timeForSolarAngle(-6.0,  /* afterTransit */true)
+    val invalid = solar.timeForSolarAngle(-36.0,  /* afterTransit */true)
 
     assertEquals("9:38", timeString(twilightStart))
     assertEquals("10:08", timeString(sunrise))

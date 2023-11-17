@@ -1,5 +1,8 @@
 package com.batoulapps.adhan2
 
+import com.batoulapps.adhan2.model.Rounding
+import com.batoulapps.adhan2.model.Shafaq
+
 /**
  * Parameters used for PrayerTime calculation customization
  *
@@ -24,19 +27,25 @@ data class CalculationParameters(
   val madhab: Madhab = Madhab.SHAFI,
 
   // Rules for placing bounds on Fajr and Isha for high latitude areas
-  val highLatitudeRule: HighLatitudeRule = HighLatitudeRule.MIDDLE_OF_THE_NIGHT,
+  val highLatitudeRule: HighLatitudeRule? = null,
 
   // Used to optionally add or subtract a set amount of time from each prayer time
   val prayerAdjustments: PrayerAdjustments = PrayerAdjustments(),
 
   // Used for method adjustments
-  val methodAdjustments: PrayerAdjustments = PrayerAdjustments()
+  val methodAdjustments: PrayerAdjustments = PrayerAdjustments(),
+
+  // Rounding
+  val rounding: Rounding = Rounding.NEAREST,
+
+  // Twilight in the sky
+  val shafaq: Shafaq = Shafaq.GENERAL
 ) {
 
-  data class NightPortions constructor(val fajr: Double, val isha: Double)
+  data class NightPortions(val fajr: Double, val isha: Double)
 
-  fun nightPortions(): NightPortions {
-    return when (this.highLatitudeRule) {
+  fun nightPortions(coordinates: Coordinates): NightPortions {
+    return when (highLatitudeRule ?: HighLatitudeRule.recommendedFor(coordinates)) {
       HighLatitudeRule.MIDDLE_OF_THE_NIGHT -> {
         NightPortions(1.0 / 2.0, 1.0 / 2.0)
       }

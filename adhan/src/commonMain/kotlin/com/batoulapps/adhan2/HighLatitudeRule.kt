@@ -20,5 +20,15 @@ enum class HighLatitudeRule {
    * Similar to [HighLatitudeRule.SEVENTH_OF_THE_NIGHT], but instead of 1/7th, the faction
    * of the night used is fajrAngle / 60 and ishaAngle/60.
    */
-  TWILIGHT_ANGLE
+  TWILIGHT_ANGLE;
+
+  companion object {
+    fun recommendedFor(coordinates: Coordinates): HighLatitudeRule {
+      return if (coordinates.latitude > 48.0) {
+        HighLatitudeRule.SEVENTH_OF_THE_NIGHT
+      } else {
+        HighLatitudeRule.MIDDLE_OF_THE_NIGHT
+      }
+    }
+  }
 }

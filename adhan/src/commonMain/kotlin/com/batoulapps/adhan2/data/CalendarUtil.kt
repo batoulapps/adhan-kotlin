@@ -1,5 +1,8 @@
 package com.batoulapps.adhan2.data
 
+import com.batoulapps.adhan2.model.Rounding
+import kotlin.math.ceil
+import kotlin.math.roundToInt
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
@@ -7,7 +10,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
-import kotlin.math.roundToInt
 
 object CalendarUtil {
   /**
@@ -25,23 +27,28 @@ object CalendarUtil {
    * @param localDateTime the date and time
    * @return the date and time with 0 seconds and minutes including rounded seconds
    */
-  fun roundedMinute(localDateTime: LocalDateTime): LocalDateTime {
+  fun roundedMinute(localDateTime: LocalDateTime, rounding: Rounding = Rounding.NEAREST): LocalDateTime {
     val originalMinute = localDateTime.minute
-    val updatedMinute = (originalMinute + (localDateTime.second / 60f).roundToInt())
-    val localDateTimeWithoutSeconds = LocalDateTime(
+    val (minute, second) = when (rounding) {
+      Rounding.NEAREST -> originalMinute + (localDateTime.second / 60f).roundToInt() to 0
+      Rounding.UP -> originalMinute + ceil(localDateTime.second / 60f).roundToInt() to 0
+      Rounding.NONE -> originalMinute to localDateTime.second
+    }
+
+    val localDateTimeWithOldMinutes = LocalDateTime(
       year = localDateTime.year,
       monthNumber = localDateTime.monthNumber,
       dayOfMonth = localDateTime.dayOfMonth,
       hour = localDateTime.hour,
-      minute = localDateTime.minute,
-      second = 0
+      minute = originalMinute,
+      second = second
     )
 
-    return if (originalMinute != updatedMinute) {
-      val delta = updatedMinute - originalMinute
-      add(localDateTimeWithoutSeconds, delta, DateTimeUnit.MINUTE)
+    return if (originalMinute != minute) {
+      val delta = minute - originalMinute
+      add(localDateTimeWithOldMinutes, delta, DateTimeUnit.MINUTE)
     } else {
-      localDateTimeWithoutSeconds
+      localDateTimeWithOldMinutes
     }
   }
 

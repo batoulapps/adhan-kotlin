@@ -10,6 +10,7 @@ import com.batoulapps.adhan2.CalculationMethod.NORTH_AMERICA
 import com.batoulapps.adhan2.CalculationMethod.OTHER
 import com.batoulapps.adhan2.CalculationMethod.QATAR
 import com.batoulapps.adhan2.CalculationMethod.SINGAPORE
+import com.batoulapps.adhan2.CalculationMethod.TURKEY
 import com.batoulapps.adhan2.CalculationMethod.UMM_AL_QURA
 import com.batoulapps.adhan2.HighLatitudeRule.MIDDLE_OF_THE_NIGHT
 import com.batoulapps.adhan2.HighLatitudeRule.SEVENTH_OF_THE_NIGHT
@@ -128,6 +129,7 @@ class TimingTest {
       "Kuwait" -> KUWAIT
       "Qatar" -> QATAR
       "Singapore" -> SINGAPORE
+      "Turkey" -> TURKEY
       else -> OTHER
     }
 

@@ -4,6 +4,8 @@ import com.batoulapps.adhan2.CalculationMethod.KARACHI
 import com.batoulapps.adhan2.CalculationMethod.MOON_SIGHTING_COMMITTEE
 import com.batoulapps.adhan2.CalculationMethod.MUSLIM_WORLD_LEAGUE
 import com.batoulapps.adhan2.CalculationMethod.NORTH_AMERICA
+import com.batoulapps.adhan2.HighLatitudeRule.MIDDLE_OF_THE_NIGHT
+import com.batoulapps.adhan2.HighLatitudeRule.SEVENTH_OF_THE_NIGHT
 import com.batoulapps.adhan2.HighLatitudeRule.TWILIGHT_ANGLE
 import com.batoulapps.adhan2.Madhab.HANAFI
 import com.batoulapps.adhan2.Prayer.ASR
@@ -17,12 +19,15 @@ import com.batoulapps.adhan2.data.DateComponents
 import com.batoulapps.adhan2.internal.TestUtils.addSeconds
 import com.batoulapps.adhan2.internal.TestUtils.makeDate
 import com.batoulapps.adhan2.internal.TestUtils.pad
+import com.batoulapps.adhan2.model.Shafaq
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
 
 class PrayerTimesTest {
 
@@ -166,6 +171,39 @@ class PrayerTimesTest {
   }
 
   @Test
+  fun testDiyanet() {
+    // values from https://namazvakitleri.diyanet.gov.tr/en-US/9541/prayer-time-for-istanbul
+    val date = DateComponents(2020, 4, 16)
+    val parameters = CalculationMethod.TURKEY.parameters
+    val coordinates = Coordinates(41.005616, 28.976380)
+
+    val zoneId = "Europe/Istanbul"
+    val prayerTimes = PrayerTimes(coordinates, date, parameters)
+    assertEquals("04:44 AM", stringifyAtTimezone(prayerTimes.fajr, zoneId))
+    assertEquals("06:16 AM", stringifyAtTimezone(prayerTimes.sunrise, zoneId))
+    assertEquals("01:09 PM", stringifyAtTimezone(prayerTimes.dhuhr, zoneId))
+    assertEquals("04:53 PM", stringifyAtTimezone(prayerTimes.asr, zoneId)) // original time 4:52pm
+    assertEquals("07:52 PM", stringifyAtTimezone(prayerTimes.maghrib, zoneId))
+    assertEquals("09:19 PM", stringifyAtTimezone(prayerTimes.isha, zoneId)) // original time 9:18pm
+  }
+
+  @Test
+  fun testEgyptian() {
+    val date = DateComponents(2020, 1, 1)
+    val parameters = CalculationMethod.EGYPTIAN.parameters
+    val coordinates = Coordinates(latitude = 30.028703, longitude = 31.249528)
+
+    val zoneId = "Africa/Cairo"
+    val prayerTimes = PrayerTimes(coordinates, date, parameters)
+    assertEquals("05:18 AM", stringifyAtTimezone(prayerTimes.fajr, zoneId))
+    assertEquals("06:51 AM", stringifyAtTimezone(prayerTimes.sunrise, zoneId))
+    assertEquals("11:59 AM", stringifyAtTimezone(prayerTimes.dhuhr, zoneId))
+    assertEquals("02:47 PM", stringifyAtTimezone(prayerTimes.asr, zoneId))
+    assertEquals("05:06 PM", stringifyAtTimezone(prayerTimes.maghrib, zoneId))
+    assertEquals("06:29 PM", stringifyAtTimezone(prayerTimes.isha, zoneId))
+  }
+
+  @Test
   fun testTimeForPrayer() {
     val components = DateComponents(2016, 7, 1)
     val parameters = MUSLIM_WORLD_LEAGUE.parameters.copy(
@@ -215,5 +253,222 @@ class PrayerTimesTest {
     assertEquals(MAGHRIB, p.nextPrayer(addSeconds(p.asr, 1)))
     assertEquals(ISHA, p.nextPrayer(addSeconds(p.maghrib, 1)))
     assertEquals(NONE, p.nextPrayer(addSeconds(p.isha, 1)))
+  }
+
+  @Test
+  fun testInvalidDate() {
+    assertFailsWith<IllegalArgumentException> {
+      val date = DateComponents(0, 0, 0)
+      PrayerTimes(Coordinates(33.720817, 73.090032), date, MUSLIM_WORLD_LEAGUE.parameters)
+    }
+
+    assertFailsWith<IllegalArgumentException> {
+      val date = DateComponents(-1, 99, 99)
+      PrayerTimes(Coordinates(33.720817, 73.090032), date, MUSLIM_WORLD_LEAGUE.parameters)
+    }
+  }
+
+  @Test
+  fun testInvalidLocation() {
+    assertFailsWith<IllegalArgumentException> {
+      val date = DateComponents(2019, 1, 1)
+      PrayerTimes(Coordinates(999.0, 999.0), date, MUSLIM_WORLD_LEAGUE.parameters)
+    }
+  }
+
+  @Test
+  fun testExtremeLocation() {
+    assertFailsWith<IllegalStateException> {
+      val date = DateComponents(2018, 1, 1)
+      PrayerTimes(Coordinates(71.275009, -156.761368), date, MUSLIM_WORLD_LEAGUE.parameters)
+    }
+
+    val date = DateComponents(2018, 3, 1)
+    val prayerTimes = PrayerTimes(Coordinates(71.275009, -156.761368), date, MUSLIM_WORLD_LEAGUE.parameters)
+    assertNotNull(prayerTimes.fajr)
+  }
+
+  @Test
+  fun testHighLatitudeRule() {
+    val date = DateComponents(2020, 6, 15)
+    val parameters = MUSLIM_WORLD_LEAGUE.parameters.copy(highLatitudeRule = MIDDLE_OF_THE_NIGHT)
+    val coordinates = Coordinates(latitude = 55.983226, longitude = -3.216649)
+
+    val zoneId = "Europe/London"
+    val prayerTimes = PrayerTimes(coordinates, date, parameters)
+    assertEquals("01:14 AM", stringifyAtTimezone(prayerTimes.fajr, zoneId))
+    assertEquals("04:26 AM", stringifyAtTimezone(prayerTimes.sunrise, zoneId))
+    assertEquals("01:14 PM", stringifyAtTimezone(prayerTimes.dhuhr, zoneId))
+    assertEquals("05:46 PM", stringifyAtTimezone(prayerTimes.asr, zoneId))
+    assertEquals("10:01 PM", stringifyAtTimezone(prayerTimes.maghrib, zoneId))
+    assertEquals("01:14 AM", stringifyAtTimezone(prayerTimes.isha, zoneId))
+
+    val seventhParams = parameters.copy(highLatitudeRule = SEVENTH_OF_THE_NIGHT)
+    val seventhPrayerTimes = PrayerTimes(coordinates, date, seventhParams)
+    assertEquals("03:31 AM", stringifyAtTimezone(seventhPrayerTimes.fajr, zoneId))
+    assertEquals("04:26 AM", stringifyAtTimezone(seventhPrayerTimes.sunrise, zoneId))
+    assertEquals("01:14 PM", stringifyAtTimezone(seventhPrayerTimes.dhuhr, zoneId))
+    assertEquals("05:46 PM", stringifyAtTimezone(seventhPrayerTimes.asr, zoneId))
+    assertEquals("10:01 PM", stringifyAtTimezone(seventhPrayerTimes.maghrib, zoneId))
+    assertEquals("10:56 PM", stringifyAtTimezone(seventhPrayerTimes.isha, zoneId))
+
+    val twilightParams = parameters.copy(highLatitudeRule = TWILIGHT_ANGLE)
+    val twilightPrayerTimes = PrayerTimes(coordinates, date, twilightParams)
+    assertEquals("02:31 AM", stringifyAtTimezone(twilightPrayerTimes.fajr, zoneId))
+    assertEquals("04:26 AM", stringifyAtTimezone(twilightPrayerTimes.sunrise, zoneId))
+    assertEquals("01:14 PM", stringifyAtTimezone(twilightPrayerTimes.dhuhr, zoneId))
+    assertEquals("05:46 PM", stringifyAtTimezone(twilightPrayerTimes.asr, zoneId))
+    assertEquals("10:01 PM", stringifyAtTimezone(twilightPrayerTimes.maghrib, zoneId))
+    assertEquals("11:50 PM", stringifyAtTimezone(twilightPrayerTimes.isha, zoneId))
+
+    val autoHighLatitudeRule = parameters.copy(highLatitudeRule = null)
+    val autoPrayerTimes = PrayerTimes(coordinates, date, autoHighLatitudeRule)
+    assertEquals(seventhPrayerTimes.fajr, autoPrayerTimes.fajr)
+    assertEquals(seventhPrayerTimes.sunrise, autoPrayerTimes.sunrise)
+    assertEquals(seventhPrayerTimes.dhuhr, autoPrayerTimes.dhuhr)
+    assertEquals(seventhPrayerTimes.asr, autoPrayerTimes.asr)
+    assertEquals(seventhPrayerTimes.maghrib, autoPrayerTimes.maghrib)
+    assertEquals(seventhPrayerTimes.isha, autoPrayerTimes.isha)
+  }
+
+  @Test
+  fun testRecommendedHighLatitudeRule() {
+    val coords1 = Coordinates(latitude = 45.983226, longitude = -3.216649)
+    assertEquals(MIDDLE_OF_THE_NIGHT, HighLatitudeRule.recommendedFor(coords1))
+
+    val coords2 = Coordinates(latitude = 48.983226, longitude = -3.216649)
+    assertEquals(SEVENTH_OF_THE_NIGHT, HighLatitudeRule.recommendedFor(coords2))
+  }
+
+  @Test
+  fun testShafaqGeneral() {
+    val parameters = MOON_SIGHTING_COMMITTEE.parameters.copy(shafaq = Shafaq.GENERAL, madhab = HANAFI)
+    val coordinates = Coordinates(latitude = 43.494, longitude = -79.844)
+
+    val zoneId = "America/New_York"
+
+    val date = DateComponents(2021, 1, 1)
+    val prayerTimes = PrayerTimes(coordinates, date, parameters)
+    assertEquals("06:16 AM", stringifyAtTimezone(prayerTimes.fajr, zoneId))
+    assertEquals("07:52 AM", stringifyAtTimezone(prayerTimes.sunrise, zoneId))
+    assertEquals("12:28 PM", stringifyAtTimezone(prayerTimes.dhuhr, zoneId))
+    assertEquals("03:12 PM", stringifyAtTimezone(prayerTimes.asr, zoneId))
+    assertEquals("04:57 PM", stringifyAtTimezone(prayerTimes.maghrib, zoneId))
+    assertEquals("06:27 PM", stringifyAtTimezone(prayerTimes.isha, zoneId))
+
+    val secondDate = DateComponents(2021, 4, 1)
+    val secondPrayerTimes = PrayerTimes(coordinates, secondDate, parameters)
+    assertEquals("05:28 AM", stringifyAtTimezone(secondPrayerTimes.fajr, zoneId))
+    assertEquals("07:01 AM", stringifyAtTimezone(secondPrayerTimes.sunrise, zoneId))
+    assertEquals("01:28 PM", stringifyAtTimezone(secondPrayerTimes.dhuhr, zoneId))
+    assertEquals("05:53 PM", stringifyAtTimezone(secondPrayerTimes.asr, zoneId))
+    assertEquals("07:49 PM", stringifyAtTimezone(secondPrayerTimes.maghrib, zoneId))
+    assertEquals("09:01 PM", stringifyAtTimezone(secondPrayerTimes.isha, zoneId))
+
+    val thirdDate = DateComponents(2021, 7, 1)
+    val thirdPrayerTimes = PrayerTimes(coordinates, thirdDate, parameters)
+    assertEquals("03:52 AM", stringifyAtTimezone(thirdPrayerTimes.fajr, zoneId))
+    assertEquals("05:42 AM", stringifyAtTimezone(thirdPrayerTimes.sunrise, zoneId))
+    assertEquals("01:28 PM", stringifyAtTimezone(thirdPrayerTimes.dhuhr, zoneId))
+    assertEquals("06:42 PM", stringifyAtTimezone(thirdPrayerTimes.asr, zoneId))
+    assertEquals("09:07 PM", stringifyAtTimezone(thirdPrayerTimes.maghrib, zoneId))
+    assertEquals("10:22 PM", stringifyAtTimezone(thirdPrayerTimes.isha, zoneId))
+
+    val fourthDate = DateComponents(2021, 11, 1)
+    val fourthPrayerTimes = PrayerTimes(coordinates, fourthDate, parameters)
+    assertEquals("06:22 AM", stringifyAtTimezone(fourthPrayerTimes.fajr, zoneId))
+    assertEquals("07:55 AM", stringifyAtTimezone(fourthPrayerTimes.sunrise, zoneId))
+    assertEquals("01:08 PM", stringifyAtTimezone(fourthPrayerTimes.dhuhr, zoneId))
+    assertEquals("04:26 PM", stringifyAtTimezone(fourthPrayerTimes.asr, zoneId))
+    assertEquals("06:13 PM", stringifyAtTimezone(fourthPrayerTimes.maghrib, zoneId))
+    assertEquals("07:35 PM", stringifyAtTimezone(fourthPrayerTimes.isha, zoneId))
+  }
+
+  @Test
+  fun testShafaqAhmer() {
+    val parameters = MOON_SIGHTING_COMMITTEE.parameters.copy(shafaq = Shafaq.AHMER)
+    val coordinates = Coordinates(latitude = 43.494, longitude = -79.844)
+
+    val zoneId = "America/New_York"
+
+    val date = DateComponents(2021, 1, 1)
+    val prayerTimes = PrayerTimes(coordinates, date, parameters)
+    assertEquals("06:16 AM", stringifyAtTimezone(prayerTimes.fajr, zoneId))
+    assertEquals("07:52 AM", stringifyAtTimezone(prayerTimes.sunrise, zoneId))
+    assertEquals("12:28 PM", stringifyAtTimezone(prayerTimes.dhuhr, zoneId))
+    assertEquals("02:37 PM", stringifyAtTimezone(prayerTimes.asr, zoneId))
+    assertEquals("04:57 PM", stringifyAtTimezone(prayerTimes.maghrib, zoneId))
+    assertEquals("06:07 PM", stringifyAtTimezone(prayerTimes.isha, zoneId)) // value from source is 6:08 PM
+
+    val secondDate = DateComponents(2021, 4, 1)
+    val secondPrayerTimes = PrayerTimes(coordinates, secondDate, parameters)
+    assertEquals("05:28 AM", stringifyAtTimezone(secondPrayerTimes.fajr, zoneId))
+    assertEquals("07:01 AM", stringifyAtTimezone(secondPrayerTimes.sunrise, zoneId))
+    assertEquals("01:28 PM", stringifyAtTimezone(secondPrayerTimes.dhuhr, zoneId))
+    assertEquals("04:59 PM", stringifyAtTimezone(secondPrayerTimes.asr, zoneId))
+    assertEquals("07:49 PM", stringifyAtTimezone(secondPrayerTimes.maghrib, zoneId))
+    assertEquals("08:45 PM", stringifyAtTimezone(secondPrayerTimes.isha, zoneId))
+
+    val thirdDate = DateComponents(2021, 7, 1)
+    val thirdPrayerTimes = PrayerTimes(coordinates, thirdDate, parameters)
+    assertEquals("03:52 AM", stringifyAtTimezone(thirdPrayerTimes.fajr, zoneId))
+    assertEquals("05:42 AM", stringifyAtTimezone(thirdPrayerTimes.sunrise, zoneId))
+    assertEquals("01:28 PM", stringifyAtTimezone(thirdPrayerTimes.dhuhr, zoneId))
+    assertEquals("05:29 PM", stringifyAtTimezone(thirdPrayerTimes.asr, zoneId))
+    assertEquals("09:07 PM", stringifyAtTimezone(thirdPrayerTimes.maghrib, zoneId))
+    assertEquals("10:19 PM", stringifyAtTimezone(thirdPrayerTimes.isha, zoneId))
+
+    val fourthDate = DateComponents(2021, 11, 1)
+    val fourthPrayerTimes = PrayerTimes(coordinates, fourthDate, parameters)
+    assertEquals("06:22 AM", stringifyAtTimezone(fourthPrayerTimes.fajr, zoneId))
+    assertEquals("07:55 AM", stringifyAtTimezone(fourthPrayerTimes.sunrise, zoneId))
+    assertEquals("01:08 PM", stringifyAtTimezone(fourthPrayerTimes.dhuhr, zoneId))
+    assertEquals("03:45 PM", stringifyAtTimezone(fourthPrayerTimes.asr, zoneId))
+    assertEquals("06:13 PM", stringifyAtTimezone(fourthPrayerTimes.maghrib, zoneId))
+    assertEquals("07:15 PM", stringifyAtTimezone(fourthPrayerTimes.isha, zoneId))
+  }
+
+  @Test
+  fun testShafaqAbyad() {
+    val parameters = MOON_SIGHTING_COMMITTEE.parameters.copy(shafaq = Shafaq.ABYAD, madhab = HANAFI)
+    val coordinates = Coordinates(latitude = 43.494, longitude = -79.844)
+
+    val zoneId = "America/New_York"
+
+    val date = DateComponents(2021, 1, 1)
+    val prayerTimes = PrayerTimes(coordinates, date, parameters)
+    assertEquals("06:16 AM", stringifyAtTimezone(prayerTimes.fajr, zoneId))
+    assertEquals("07:52 AM", stringifyAtTimezone(prayerTimes.sunrise, zoneId))
+    assertEquals("12:28 PM", stringifyAtTimezone(prayerTimes.dhuhr, zoneId))
+    assertEquals("03:12 PM", stringifyAtTimezone(prayerTimes.asr, zoneId))
+    assertEquals("04:57 PM", stringifyAtTimezone(prayerTimes.maghrib, zoneId))
+    assertEquals("06:28 PM", stringifyAtTimezone(prayerTimes.isha, zoneId))
+
+    val secondDate = DateComponents(2021, 4, 1)
+    val secondPrayerTimes = PrayerTimes(coordinates, secondDate, parameters)
+    assertEquals("05:28 AM", stringifyAtTimezone(secondPrayerTimes.fajr, zoneId))
+    assertEquals("07:01 AM", stringifyAtTimezone(secondPrayerTimes.sunrise, zoneId))
+    assertEquals("01:28 PM", stringifyAtTimezone(secondPrayerTimes.dhuhr, zoneId))
+    assertEquals("05:53 PM", stringifyAtTimezone(secondPrayerTimes.asr, zoneId))
+    assertEquals("07:49 PM", stringifyAtTimezone(secondPrayerTimes.maghrib, zoneId))
+    assertEquals("09:12 PM", stringifyAtTimezone(secondPrayerTimes.isha, zoneId))
+
+    val thirdDate = DateComponents(2021, 7, 1)
+    val thirdPrayerTimes = PrayerTimes(coordinates, thirdDate, parameters)
+    assertEquals("03:52 AM", stringifyAtTimezone(thirdPrayerTimes.fajr, zoneId))
+    assertEquals("05:42 AM", stringifyAtTimezone(thirdPrayerTimes.sunrise, zoneId))
+    assertEquals("01:28 PM", stringifyAtTimezone(thirdPrayerTimes.dhuhr, zoneId))
+    assertEquals("06:42 PM", stringifyAtTimezone(thirdPrayerTimes.asr, zoneId))
+    assertEquals("09:07 PM", stringifyAtTimezone(thirdPrayerTimes.maghrib, zoneId))
+    assertEquals("11:17 PM", stringifyAtTimezone(thirdPrayerTimes.isha, zoneId))
+
+    val fourthDate = DateComponents(2021, 11, 1)
+    val fourthPrayerTimes = PrayerTimes(coordinates, fourthDate, parameters)
+    assertEquals("06:22 AM", stringifyAtTimezone(fourthPrayerTimes.fajr, zoneId))
+    assertEquals("07:55 AM", stringifyAtTimezone(fourthPrayerTimes.sunrise, zoneId))
+    assertEquals("01:08 PM", stringifyAtTimezone(fourthPrayerTimes.dhuhr, zoneId))
+    assertEquals("04:26 PM", stringifyAtTimezone(fourthPrayerTimes.asr, zoneId))
+    assertEquals("06:13 PM", stringifyAtTimezone(fourthPrayerTimes.maghrib, zoneId))
+    assertEquals("07:37 PM", stringifyAtTimezone(fourthPrayerTimes.isha, zoneId))
   }
 }
