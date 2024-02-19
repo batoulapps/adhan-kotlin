@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.9.20"
+    kotlin("plugin.serialization") version "1.9.22"
     id("maven-publish")
     id("signing")
 }
@@ -46,7 +46,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlin:kotlin-stdlib")
-                api("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
+                api("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
             }
         }
 
@@ -54,7 +54,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                api("com.squareup.okio:okio:3.6.0")
+                api("com.squareup.okio:okio:3.8.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
             }
         }
@@ -70,7 +70,7 @@ kotlin {
         val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
-                implementation("com.squareup.okio:okio-nodefilesystem:3.6.0")
+                implementation("com.squareup.okio:okio-nodefilesystem:3.8.0")
                 implementation(npm("@js-joda/timezone", "2.3.0"))
             }
         }
