@@ -1,6 +1,8 @@
 # Changelog
 
 ## development
+
+## version 0.0.5
 - update Kotlin to 1.9.22
 - new target: Linux arm64
 - support Turkish Diyanet method
