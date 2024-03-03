@@ -15,7 +15,7 @@ All primary development is for the Kotlin Multiplatform version. There is also a
 ### Gradle
 
 ```
-implementation("com.batoulapps.adhan:adhan2:0.0.4")
+implementation("com.batoulapps.adhan:adhan2:0.0.5")
 ```
 
 **Note** - on Android, [kotlinx.datetime](https://github.com/Kotlin/kotlinx-datetime) uses `java.time`, which needs either a minimum api level of 26, or enabling of `coreLibraryDesugaring` as per the instructions [here](https://developer.android.com/studio/write/java8-support#library-desugaring).
