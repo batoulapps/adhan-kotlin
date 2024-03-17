@@ -7,6 +7,6 @@ import platform.posix.getenv
 
 @OptIn(ExperimentalForeignApi::class)
 actual class TestUtil actual constructor() {
-  actual fun fileSystem(): FileSystem = FileSystem.SYSTEM
+  actual fun fileSystem(): FileSystem? = FileSystem.SYSTEM
   actual fun environmentVariable(name: String): String? = getenv(name)?.toKString()
 }

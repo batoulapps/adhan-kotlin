@@ -29,7 +29,6 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import okio.Path.Companion.toPath
 
@@ -41,7 +40,10 @@ class TimingTest {
     val testUtil = TestUtil()
 
     val root = (testUtil.environmentVariable("ADHAN_ROOT") ?: "").toPath()
-    val fs = testUtil.fileSystem()
+
+    // disable time verification tests for platforms without filesystem support
+    // currently, this is just wasm
+    val fs = testUtil.fileSystem() ?: return
 
     val jsonPath = root.resolve("Shared/Times/")
     assertTrue(fs.exists(jsonPath), "Json Path Does not Exist: $jsonPath")
