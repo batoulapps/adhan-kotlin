@@ -13,3 +13,10 @@ allprojects {
         mavenCentral()
     }
 }
+
+// Disable NPM to NodeJS nightly compatibility check.
+// Drop this when NodeJs version that supports latest Wasm become stable
+// Required so wasm tests can run
+tasks.withType<org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask>().configureEach {
+    args.add("--ignore-engines")
+}

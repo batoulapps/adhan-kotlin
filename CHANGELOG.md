@@ -1,6 +1,7 @@
 # Changelog
 
 ## development
+- support wasm target
 
 ## version 0.0.5
 - update Kotlin to 1.9.22
