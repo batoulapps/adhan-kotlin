@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.targets.jvm.tasks.KotlinJvmTest
 import org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest
 import org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest
@@ -18,6 +19,17 @@ kotlin {
     jvm()
 
     js(IR) {
+        nodejs {
+            testTask {
+                useMocha {
+                    timeout = "30s"
+                }
+            }
+        }
+    }
+
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
         nodejs {
             testTask {
                 useMocha {
@@ -53,10 +65,11 @@ kotlin {
 
         val commonTest by getting {
             dependencies {
+                implementation(kotlin("test"))
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
                 api("com.squareup.okio:okio:3.8.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
             }
         }
 
@@ -72,6 +85,12 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-js"))
                 implementation("com.squareup.okio:okio-nodefilesystem:3.8.0")
+                implementation(npm("@js-joda/timezone", "2.3.0"))
+            }
+        }
+
+        val wasmJsTest by getting {
+            dependencies {
                 implementation(npm("@js-joda/timezone", "2.3.0"))
             }
         }
@@ -185,6 +204,12 @@ publishing {
 
         }
     }
+}
+
+// for wasm to be able to run tests
+with(org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin.apply(rootProject)) {
+    nodeVersion = "21.0.0-v8-canary202309167e82ab1fa2"
+    nodeDownloadBaseUrl = "https://nodejs.org/download/v8-canary"
 }
 
 // auto replace yarn.lock
