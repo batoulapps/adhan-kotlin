@@ -35,7 +35,7 @@ val prayerTimes = PrayerTimes(coordinates, dateComponents, parameters)
 Create a `Coordinates` object with the latitude and longitude for the location you want prayer times for.
 
 ```kotlin
-val coordinates = Coordinates(35.78056, -78.6389);
+val coordinates = Coordinates(35.78056, -78.6389)
 ```
 
 #### Date
@@ -43,7 +43,7 @@ val coordinates = Coordinates(35.78056, -78.6389);
 The date parameter passed in should be an instance of the `DateComponents` object. The year, month, and day values need to be populated. All other values will be ignored. The year, month and day values should be for the  local date that you want prayer times for. These date values are expected to be for the Gregorian calendar. There's also a convenience method for converting a `java.util.Date` to `DateComponents`.
 
 ```kotlin
-val date = DateComponents(2015, 11, 1);
+val date = DateComponents(2015, 11, 1)
 ```
 
 #### Calculation parameters
@@ -113,8 +113,8 @@ formatter.format(Date(prayerTimes.fajr.toEpochMilliseconds()))
 As of version 1.1.0, this library provides a `Qibla` class for getting the qibla for a given location.
 
 ```kotlin
-val coordinates = Coordinates(latitude, longitude);
-val qibla = Qibla(coordinates);
+val coordinates = Coordinates(latitude, longitude)
+val qibla = Qibla(coordinates)
 // qibla.direction is the qibla direction
 ```
 
@@ -123,7 +123,7 @@ val qibla = Qibla(coordinates);
 The library provides a `SunnahTimes` class.
 
 ```kotlin
-val sunnahTimes = SunnahTimes(prayerTimes);
+val sunnahTimes = SunnahTimes(prayerTimes)
 // sunnahTimes.middleOfTheNight is the midpoint between Maghrib and Fajr
 // sunnahTimes.lastThirdOfTheNight is the last third between Maghrib and Fajr
 ```
