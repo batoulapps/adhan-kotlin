@@ -1,4 +1,5 @@
-import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
+@file:OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
+
 import org.jetbrains.kotlin.gradle.targets.jvm.tasks.KotlinJvmTest
 import org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest
 import org.jetbrains.kotlin.gradle.targets.js.testing.KotlinJsTest
@@ -7,7 +8,7 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.9.22"
+    kotlin("plugin.serialization") version "2.1.0"
     id("maven-publish")
     id("signing")
 }
@@ -28,7 +29,6 @@ kotlin {
         }
     }
 
-    @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         nodejs {
             testTask {
@@ -55,11 +55,15 @@ kotlin {
     watchosArm64()
     watchosSimulatorArm64()
 
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
     sourceSets {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlin:kotlin-stdlib")
-                api("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
+                api("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
             }
         }
 
@@ -68,8 +72,8 @@ kotlin {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                api("com.squareup.okio:okio:3.8.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+                api("com.squareup.okio:okio:3.9.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
             }
         }
 
@@ -84,14 +88,14 @@ kotlin {
         val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
-                implementation("com.squareup.okio:okio-nodefilesystem:3.8.0")
-                implementation(npm("@js-joda/timezone", "2.3.0"))
+                implementation("com.squareup.okio:okio-nodefilesystem:3.9.1")
+                implementation(npm("@js-joda/timezone", "2.21.1"))
             }
         }
 
         val wasmJsTest by getting {
             dependencies {
-                implementation(npm("@js-joda/timezone", "2.3.0"))
+                implementation(npm("@js-joda/timezone", "2.21.1"))
             }
         }
     }
@@ -186,7 +190,7 @@ publishing {
         pom {
             name.set("Adhan Prayertimes Library")
             description.set("A high precision Islamic prayer times library")
-            url.set("https://github.com/batoulapps/adhan-java")
+            url.set("https://github.com/batoulapps/adhan-kotlin")
 
             licenses {
                 license {
@@ -204,12 +208,6 @@ publishing {
 
         }
     }
-}
-
-// for wasm to be able to run tests
-with(org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin.apply(rootProject)) {
-    nodeVersion = "21.0.0-v8-canary202309167e82ab1fa2"
-    nodeDownloadBaseUrl = "https://nodejs.org/download/v8-canary"
 }
 
 // auto replace yarn.lock

@@ -29,3 +29,7 @@ build/
 
 # gradle
 .gradle
+local.properties
+
+# kotlin
+.kotlin
