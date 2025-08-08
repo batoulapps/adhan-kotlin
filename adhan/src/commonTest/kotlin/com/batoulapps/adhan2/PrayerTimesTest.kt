@@ -25,6 +25,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -470,5 +471,43 @@ class PrayerTimesTest {
     assertEquals("04:26 PM", stringifyAtTimezone(fourthPrayerTimes.asr, zoneId))
     assertEquals("06:13 PM", stringifyAtTimezone(fourthPrayerTimes.maghrib, zoneId))
     assertEquals("07:37 PM", stringifyAtTimezone(fourthPrayerTimes.isha, zoneId))
+  }
+
+  @Test
+  fun testPrayerTimesProblems_asr_after_maghrib() {
+    for (day in 2..8) {
+      checkPrayersOrder(DateComponents(2026, 1, day), Coordinates(67.37800510772394, -67.26246475893095))
+    }
+  }
+
+  @Test
+  fun testPrayerTimesProblems_fajr_after_sunrise__and_isha_before_maghrib1() {
+    checkPrayersOrder(DateComponents(2025, 12, 1), Coordinates(42.74674252600066, 177.2401196144623))
+  }
+
+  @Test
+  fun testPrayerTimesProblems_fajr_after_sunrise__and_isha_before_maghrib2() {
+    checkPrayersOrder(DateComponents(2025, 12, 1), Coordinates(47.082209457885355, 177.24642294208638))
+  }
+
+  private fun checkPrayersOrder(date: DateComponents, coordinates: Coordinates) {
+    val params = MUSLIM_WORLD_LEAGUE.parameters.copy(
+      madhab = Madhab.SHAFI,
+      highLatitudeRule = HighLatitudeRule.TWILIGHT_ANGLE)
+    val prayerTimes = PrayerTimes(coordinates, date, params)
+    println("Date: ${date.year}-${date.month}-${date.day}")
+    println("Coordinates - lat: ${coordinates.latitude}, lon: ${coordinates.longitude}")
+    println("  - fajr: ${prayerTimes.fajr}")
+    println("  - sunrise: ${prayerTimes.sunrise}")
+    println("  - dhuhr: ${prayerTimes.dhuhr}")
+    println("  - asr: ${prayerTimes.asr}")
+    println("  - maghrib: ${prayerTimes.maghrib}")
+    println("  - isha: ${prayerTimes.isha}")
+    println("----")
+    assertTrue(prayerTimes.fajr.epochSeconds < prayerTimes.sunrise.epochSeconds);
+    assertTrue(prayerTimes.sunrise.epochSeconds < prayerTimes.dhuhr.epochSeconds);
+    assertTrue(prayerTimes.dhuhr.epochSeconds < prayerTimes.asr.epochSeconds);
+    assertTrue(prayerTimes.asr.epochSeconds < prayerTimes.maghrib.epochSeconds);
+    assertTrue(prayerTimes.maghrib.epochSeconds < prayerTimes.isha.epochSeconds);
   }
 }
