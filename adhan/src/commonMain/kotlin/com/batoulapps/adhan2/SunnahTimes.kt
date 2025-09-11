@@ -6,7 +6,7 @@ import com.batoulapps.adhan2.data.CalendarUtil.roundedMinute
 import com.batoulapps.adhan2.data.CalendarUtil.toUtcInstant
 import com.batoulapps.adhan2.data.DateComponents
 import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 class SunnahTimes(prayerTimes: PrayerTimes) {
   /* The midpoint between Maghrib and Fajr */

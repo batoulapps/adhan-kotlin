@@ -19,10 +19,10 @@ import com.batoulapps.adhan2.model.Shafaq
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
+import kotlin.time.Instant
 
 /**
  * Calculate PrayerTimes

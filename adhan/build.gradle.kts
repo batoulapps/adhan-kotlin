@@ -8,7 +8,7 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization") version "2.1.0"
+    kotlin("plugin.serialization") version "2.2.20"
     id("maven-publish")
     id("signing")
 }
@@ -17,6 +17,10 @@ group = "com.batoulapps.adhan"
 version = property("version") ?: ""
 
 kotlin {
+    compilerOptions {
+        optIn.add("kotlin.time.ExperimentalTime")
+    }
+
     jvm()
 
     js(IR) {
@@ -63,7 +67,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlin:kotlin-stdlib")
-                api("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
+                api("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
             }
         }
 
@@ -73,7 +77,7 @@ kotlin {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
                 api("com.squareup.okio:okio:3.9.1")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
             }
         }
 
@@ -89,13 +93,13 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-js"))
                 implementation("com.squareup.okio:okio-nodefilesystem:3.9.1")
-                implementation(npm("@js-joda/timezone", "2.21.1"))
+                implementation(npm("@js-joda/timezone", "2.3.0"))
             }
         }
 
         val wasmJsTest by getting {
             dependencies {
-                implementation(npm("@js-joda/timezone", "2.21.1"))
+                implementation(npm("@js-joda/timezone", "2.3.0"))
             }
         }
     }

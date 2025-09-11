@@ -4,12 +4,12 @@ import com.batoulapps.adhan2.data.CalendarUtil
 import com.batoulapps.adhan2.data.CalendarUtil.toUtcInstant
 import com.batoulapps.adhan2.data.DateComponents
 import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Instant
 
 object TestUtils {
 
@@ -22,8 +22,8 @@ object TestUtils {
     second: Int = 0
   ) = LocalDateTime(
     year = year,
-    monthNumber = month,
-    dayOfMonth = day,
+    month = month,
+    day = day,
     hour = hour,
     minute = minute,
     second = second
@@ -50,7 +50,7 @@ object TestUtils {
   }
 
   fun makeDateWithOffset(year: Int, month: Int, day: Int, offset: Int, dateTimeUnit: DateTimeUnit): DateComponents {
-    val localDateTime = LocalDateTime(year = year, monthNumber = month, dayOfMonth = day, hour = 0, minute = 0)
+    val localDateTime = LocalDateTime(year = year, month = month, day = day, hour = 0, minute = 0)
     val instant = localDateTime.toInstant(TimeZone.UTC)
     val updatedInstant = instant.plus(offset, dateTimeUnit, TimeZone.UTC)
     val updatedLocalDateTime = updatedInstant.toLocalDateTime(TimeZone.UTC)

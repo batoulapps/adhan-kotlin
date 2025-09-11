@@ -7,11 +7,12 @@ import com.batoulapps.adhan2.HighLatitudeRule.MIDDLE_OF_THE_NIGHT
 import com.batoulapps.adhan2.HighLatitudeRule.SEVENTH_OF_THE_NIGHT
 import com.batoulapps.adhan2.data.DateComponents
 import com.batoulapps.adhan2.internal.TestUtils.pad
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.time.Instant
 
 class SunnahTimesTest {
 
@@ -158,6 +159,6 @@ class SunnahTimesTest {
     val minutes = pad(localDateTime.minute)
     val amPM = if (localDateTime.hour >= 12) "PM" else "AM"
     val year = pad(localDateTime.year % 2000)
-    return "${localDateTime.monthNumber}/${localDateTime.dayOfMonth}/$year, $hour:$minutes $amPM"
+    return "${localDateTime.month.number}/${localDateTime.day}/$year, $hour:$minutes $amPM"
   }
 }

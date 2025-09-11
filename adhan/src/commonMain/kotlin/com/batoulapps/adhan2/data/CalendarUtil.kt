@@ -4,12 +4,12 @@ import com.batoulapps.adhan2.model.Rounding
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Instant
 
 object CalendarUtil {
   /**
@@ -37,8 +37,8 @@ object CalendarUtil {
 
     val localDateTimeWithOldMinutes = LocalDateTime(
       year = localDateTime.year,
-      monthNumber = localDateTime.monthNumber,
-      dayOfMonth = localDateTime.dayOfMonth,
+      month = localDateTime.month,
+      day = localDateTime.day,
       hour = localDateTime.hour,
       minute = originalMinute,
       second = second

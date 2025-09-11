@@ -1,9 +1,10 @@
 package com.batoulapps.adhan2.data
 
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Instant
 
 class DateComponents(val year: Int, val month: Int, val day: Int) {
   companion object {
@@ -23,7 +24,7 @@ class DateComponents(val year: Int, val month: Int, val day: Int) {
      * @return the DateComponents
      */
     fun fromLocalDateTime(date: LocalDateTime): DateComponents {
-      return DateComponents(date.year, date.monthNumber, date.dayOfMonth)
+      return DateComponents(date.year, date.month.number, date.day)
     }
   }
 }

@@ -1,9 +1,10 @@
 package com.batoulapps.adhan2.internal
 
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Instant
 
 object CalendricalHelper {
   /**
@@ -23,7 +24,7 @@ object CalendricalHelper {
    */
   fun julianDay(date: LocalDateTime): Double {
     return julianDay(
-      date.year, date.monthNumber, date.dayOfMonth,
+      date.year, date.month.number, date.day,
       date.hour + date.minute / 60.0
     )
   }
