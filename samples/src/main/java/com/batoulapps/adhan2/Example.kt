@@ -1,11 +1,11 @@
 package com.batoulapps.adhan2
 
 import com.batoulapps.adhan2.data.DateComponents
-import kotlinx.datetime.Clock.System
-import kotlinx.datetime.Instant
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.TimeZone
+import kotlin.time.Clock.System
+import kotlin.time.Instant
 
 object Example {
   private fun Instant.asDate() = Date(toEpochMilliseconds())

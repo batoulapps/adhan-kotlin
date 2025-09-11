@@ -24,13 +24,13 @@ import com.batoulapps.adhan2.internal.TestUtils.getDateComponents
 import kotlin.math.abs
 import kotlin.test.Test
 import kotlin.test.assertTrue
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.json.Json
 import okio.Path.Companion.toPath
+import kotlin.time.Instant
 
 class TimingTest {
 
@@ -106,12 +106,11 @@ class TimingTest {
     val referenceDateTime = LocalDateTime(
       // PrayerTimes is in UTC, so we need calculatedDateTime here instead
       calculatedDateTime.year,
-      calculatedDateTime.monthNumber,
-      calculatedDateTime.dayOfMonth,
+      calculatedDateTime.month,
+      calculatedDateTime.day,
       resolvedHour,
       minutes
     )
-
 
     val referenceInstant = referenceDateTime.toInstant(targetTimeZone)
     val calculatedInstant = calculatedDateTime.toInstant(targetTimeZone)
