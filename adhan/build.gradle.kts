@@ -9,8 +9,7 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization") version "2.2.20"
-    id("maven-publish")
-    id("signing")
+    id("com.vanniktech.maven.publish") version "0.34.0"
 }
 
 group = "com.batoulapps.adhan"
@@ -121,96 +120,30 @@ kotlin {
     }
 }
 
-// Fix Gradle warning about signing tasks using publishing task outputs without explicit dependencies
-// https://github.com/gradle/gradle/issues/26091
-tasks.withType<AbstractPublishToMaven>().configureEach {
-    val signingTasks = tasks.withType<Sign>()
-    mustRunAfter(signingTasks)
-}
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
+    coordinates("com.batoulapps.adhan", "adhan2", version.toString())
 
-// taken from here with minor modifications:
-// https://dev.to/kotlin/how-to-build-and-publish-a-kotlin-multiplatform-library-going-public-4a8k
-// planning on moving this to a plugin one day.
+    pom {
+        name.set("Adhan Prayertimes Library")
+        description.set("A high precision Islamic prayer times library")
+        url.set("https://github.com/batoulapps/adhan-kotlin")
 
-// Stub secrets to let the project sync and build without the publication values set up
-fun propertyOrEmpty(name: String): String {
-    return if (project.hasProperty(name)) {
-        project.property(name).toString()
-    } else {
-        ""
-    }
-}
-
-ext["signing.keyId"] = propertyOrEmpty("signing.keyId")
-ext["signing.password"] = propertyOrEmpty("signing.password")
-ext["signing.secretKeyRingFile"] = propertyOrEmpty("signing.secretKeyRingFile")
-ext["ossrhUsername"] = propertyOrEmpty("mavenCentralRepositoryUsername")
-ext["ossrhPassword"] = propertyOrEmpty("mavenCentralRepositoryPassword")
-
-val javadocJar by tasks.registering(Jar::class) {
-    archiveClassifier.set("javadoc")
-}
-
-fun getExtraString(name: String) = ext[name]?.toString()
-
-publishing {
-    publications.withType<MavenPublication> {
-        artifactId = artifactId.replace("adhan", "adhan2")
-    }
-
-    // Configure maven central repository
-    repositories {
-        maven {
-            name = "snapshots"
-            setUrl("https://oss.sonatype.org/content/repositories/snapshots/")
-            credentials {
-                username = getExtraString("ossrhUsername")
-                password = getExtraString("ossrhPassword")
-            }
-            mavenContent {
-                snapshotsOnly()
+        licenses {
+            license {
+                name.set("MIT")
+                url.set("https://opensource.org/licenses/MIT")
             }
         }
-
-        maven {
-            name = "sonatype"
-            setUrl("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-            credentials {
-                username = getExtraString("ossrhUsername")
-                password = getExtraString("ossrhPassword")
-            }
-            mavenContent {
-                releasesOnly()
+        developers {
+            developer {
             }
         }
-    }
-
-    // Configure all publications
-    publications.withType<MavenPublication> {
-        // Stub javadoc.jar artifact
-        artifact(javadocJar.get())
-
-        // Provide artifacts information requited by Maven Central
-        pom {
-            name.set("Adhan Prayertimes Library")
-            description.set("A high precision Islamic prayer times library")
+        scm {
             url.set("https://github.com/batoulapps/adhan-kotlin")
-
-            licenses {
-                license {
-                    name.set("MIT")
-                    url.set("https://opensource.org/licenses/MIT")
-                }
-            }
-            developers {
-                developer {
-                }
-            }
-            scm {
-                url.set("https://github.com/batoulapps/adhan-java")
-            }
-
         }
+
     }
 }
 
@@ -219,9 +152,4 @@ rootProject.plugins.withType(org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlu
     rootProject.the<YarnRootExtension>().yarnLockMismatchReport =
         YarnLockMismatchReport.WARNING
     rootProject.the<YarnRootExtension>().yarnLockAutoReplace = true
-}
-
-// Signing artifacts. Signing.* extra properties values will be used
-signing {
-    sign(publishing.publications)
 }
