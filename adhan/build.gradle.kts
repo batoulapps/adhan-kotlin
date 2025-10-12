@@ -76,7 +76,7 @@ kotlin {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                api("com.squareup.okio:okio:3.9.1")
+                api("com.squareup.okio:okio:3.16.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
             }
         }
@@ -92,7 +92,7 @@ kotlin {
         val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
-                implementation("com.squareup.okio:okio-nodefilesystem:3.9.1")
+                implementation("com.squareup.okio:okio-nodefilesystem:3.16.1")
                 implementation(npm("@js-joda/timezone", "2.3.0"))
             }
         }
