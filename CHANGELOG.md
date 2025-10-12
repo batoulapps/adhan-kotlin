@@ -1,7 +1,12 @@
 # Changelog
 
 ## development
+
+## version 0.0.6
+- update Kotlin to 2.2.20
+- update kotlinx-datetime (thanks @fathonyfath)
 - support wasm target
+- use vanniktech Gradle Maven Publish Plugin
 
 ## version 0.0.5
 - update Kotlin to 1.9.22
