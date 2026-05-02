@@ -474,6 +474,13 @@ class PrayerTimesTest {
   }
 
   @Test
+  fun testPrayerTimesProblems_asr_after_maghrib() {
+    for (day in 2..8) {
+      checkPrayersOrder(DateComponents(2026, 1, day), Coordinates(67.37800510772394, -67.26246475893095))
+    }
+  }
+
+  @Test
   fun testPrayerTimesProblems_fajr_after_sunrise__and_isha_before_maghrib1() {
     checkPrayersOrder(DateComponents(2025, 12, 1), Coordinates(42.74674252600066, 177.2401196144623))
   }
