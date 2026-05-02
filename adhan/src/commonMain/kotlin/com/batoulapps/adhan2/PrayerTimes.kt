@@ -87,7 +87,10 @@ data class PrayerTimes(
       }
 
       // get night length
-      val tomorrowSunrise = tomorrowSunriseComponents.dateComponents(tomorrow)
+      var tomorrowSunrise = tomorrowSunriseComponents.dateComponents(tomorrow)
+      if (tomorrowSunrise.before(sunsetComponents)) {
+        tomorrowSunrise = add(tomorrowSunrise, 1, DateTimeUnit.DAY)
+      }
       val night = tomorrowSunrise.toInstant(TimeZone.UTC).toEpochMilliseconds() -
           sunsetComponents.toInstant(TimeZone.UTC).toEpochMilliseconds()
 
@@ -124,7 +127,7 @@ data class PrayerTimes(
         )
       }
 
-      if (tempFajr == null || tempFajr.before(safeFajr)) {
+      if (tempFajr == null || tempFajr.before(safeFajr) || tempFajr.after(sunriseComponents)) {
         tempFajr = safeFajr
       }
 
@@ -157,7 +160,7 @@ data class PrayerTimes(
           add(sunsetComponents, nightFraction.toInt(), DateTimeUnit.SECOND)
         }
 
-        if (tempIsha == null || tempIsha.after(safeIsha)) {
+        if (tempIsha == null || tempIsha.after(safeIsha) || tempIsha.before(sunsetComponents)) {
           tempIsha = safeIsha
         }
       }
