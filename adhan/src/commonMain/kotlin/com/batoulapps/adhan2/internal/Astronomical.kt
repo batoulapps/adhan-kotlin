@@ -193,11 +193,11 @@ internal object Astronomical {
   }
 
   /**
-   * Return the approximate transite
+   * Return the approximate transit
    * @param L the longitude
    * @param Θ0 the sidereal time
    * @param α2 the right ascension
-   * @return the approximate transite
+   * @return the approximate transit
    */
   fun approximateTransit(L: Double, Θ0: Double, α2: Double): Double {
     /* Equation from page Astronomical Algorithms 102 */
