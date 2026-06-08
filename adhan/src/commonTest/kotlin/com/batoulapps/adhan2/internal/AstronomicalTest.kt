@@ -121,6 +121,44 @@ class AstronomicalTest {
   }
 
   @Test
+  fun testApproximateTransitNearDateLine() {
+    // On Dec 1, 2025 for a location at longitude ~177°E, the solar transit falls just
+    // before UTC midnight. The raw (alpha2 + Lw - theta0) / 360 value is a tiny negative
+    // number (~-0.000028), which normalizeWithBound wraps to ~0.9999 — placing the transit
+    // at 23:59 UTC (local noon the *next* local day) instead of ~00:00 UTC (local noon on
+    // the requested date). The fix detects this by comparing against the expected transit
+    // for the longitude and adjusting by one cycle when they differ by more than half a day.
+    val jd = julianDay(2025, 12, 1)
+    val solar = SolarCoordinates(jd)
+    val longitude = 177.2401196144623
+    val m0 = approximateTransit(longitude, solar.apparentSiderealTime, solar.rightAscension)
+    // After fix: m0 should be near 0 (transit just before/after UTC midnight = local noon Dec 1),
+    // not near 1 (which would be 23:59 UTC = local noon Dec 2).
+    assertTrue(abs(m0) < 0.1, "approximateTransit near date line returned $m0, expected value near 0")
+  }
+
+  @Test
+  fun testSolarTimeContinuityNearDateLine() {
+    // Near the International Date Line, the solar transit crosses UTC midnight on certain dates,
+    // causing approximateTransit to wrap to the wrong cycle without the fix. This produces ~24h
+    // jumps in raw transit/sunrise/sunset values between consecutive days (e.g. Dec 1 → Dec 2,
+    // 2025 at this longitude), which breaks night-duration and safe fajr/isha calculations.
+    lateinit var previousTime: SolarTime
+    val coordinates = Coordinates(42.74674252600066, 177.2401196144623)
+    for (i in 0..364) {
+      val time = SolarTime(
+        TestUtils.makeDateWithOffset(2025, 11, 1, i, DateTimeUnit.DAY), coordinates
+      )
+      if (i > 0) {
+        assertTrue(abs(time.transit - previousTime.transit) < (1.0 / 60.0))
+        assertTrue(abs(time.sunrise - previousTime.sunrise) < (2.0 / 60.0))
+        assertTrue(abs(time.sunset - previousTime.sunset) < (2.0 / 60.0))
+      }
+      previousTime = time
+    }
+  }
+
+  @Test
   fun testAltitudeOfCelestialBody() {
     val φ = 38 + 55 / 60.0 + 17.0 / 3600
     val δ = -6 - 43 / 60.0 - 11.61 / 3600
