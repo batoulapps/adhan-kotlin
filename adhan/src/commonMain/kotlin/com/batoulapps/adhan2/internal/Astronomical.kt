@@ -193,16 +193,26 @@ internal object Astronomical {
   }
 
   /**
-   * Return the approximate transite
+   * Return the approximate transit
    * @param L the longitude
    * @param Θ0 the sidereal time
    * @param α2 the right ascension
-   * @return the approximate transite
+   * @return the approximate transit
    */
   fun approximateTransit(L: Double, Θ0: Double, α2: Double): Double {
     /* Equation from page Astronomical Algorithms 102 */
     val Lw = L * -1
-    return normalizeWithBound((α2 + Lw - Θ0) / 360, 1.0)
+    val m0 = normalizeWithBound((α2 + Lw - Θ0) / 360, 1.0)
+    // For locations near the International Date Line, normalizeWithBound can produce
+    // an m0 for the wrong calendar date.  We detect this by comparing m0 to a
+    // generalized transit time based on the longitude If they differ by more than
+    // half a day, m0 is off by one cycle and we adjust in the correct direction.
+    val expectedTransit = normalizeWithBound((12.0 - L / 15.0) / 24.0, 1.0)
+    return when {
+      m0 - expectedTransit > 0.5 -> m0 - 1.0
+      expectedTransit - m0 > 0.5 -> m0 + 1.0
+      else -> m0
+    }
   }
 
   /**
