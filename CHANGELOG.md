@@ -2,6 +2,12 @@
 
 ## development
 
+## version 0.0.7
+- fix for an edge case around international date line (thanks @z3bi)
+- update Kotlin to 2.4.0
+- update dependencies to their latest versions
+- note: next version will likely remove macOSX64 and watchOSX64 targets.
+
 ## version 0.0.6
 - update Kotlin to 2.2.20
 - update kotlinx-datetime (thanks @fathonyfath)
