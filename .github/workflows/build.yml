@@ -14,21 +14,23 @@ jobs:
   validate:
     strategy:
       matrix:
-        os: [ macOS-latest, ubuntu-latest ]
+        include:
+          - name: linux
+            os: ubuntu-latest
+            tasks: ":adhan:linuxX64Test :adhan:jvmTest :adhan:jsTest :adhan:wasmJsTest :samples:build"
 
+          - name: apple-arm64
+            os: macos-latest
+            tasks: ":adhan:iosSimulatorArm64Test :adhan:macosArm64Test"
     runs-on: ${{matrix.os}}
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK ${{ matrix.version }}
-        uses: actions/setup-java@v3
+      - uses: actions/checkout@v6.0.3
+      - name: Set up JDK
+        uses: actions/setup-java@v5.2.0
         with:
-          java-version: 17
+          java-version: 21
           distribution: 'zulu'
-      - name: Run tests for Linux, JVM, and Javascript
-        if: matrix.os == 'ubuntu-latest'
-        run: ./gradlew linuxX64Test jvmTest jsTest
-      - name: Run test on iOS
-        if: matrix.os == 'macOS-latest'
-        run: ./gradlew iosX64Test macOSX64Test
-      - uses: codecov/codecov-action@v3
+      - name: Run ${{ matrix.name }} tests
+        run: ./gradlew --no-configure-on-demand ${{ matrix.tasks }}
+      - uses: codecov/codecov-action@v7.0.0
         if: matrix.os == 'ubuntu-latest'
