@@ -13,11 +13,7 @@ dependencies {
   implementation(project(":adhan"))
 }
 
-kotlin {
-    compilerOptions {
-        optIn.add("kotlin.time.ExperimentalTime")
-    }
-}
+kotlin { }
 
 application {
  mainClass.set("com.batoulapps.adhan2.Example")
