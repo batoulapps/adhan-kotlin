@@ -7,9 +7,9 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnLockMismatchReport
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 
 plugins {
-    kotlin("multiplatform")
-    kotlin("plugin.serialization") version "2.2.20"
-    id("com.vanniktech.maven.publish") version "0.34.0"
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.vanniktech.maven.publish)
 }
 
 group = "com.batoulapps.adhan"
@@ -65,40 +65,40 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlin:kotlin-stdlib")
-                api("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
+                implementation(libs.kotlin.stdlib)
+                api(libs.kotlinx.datetime)
             }
         }
 
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test"))
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
-                api("com.squareup.okio:okio:3.16.1")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+                implementation(libs.kotlin.test)
+                implementation(libs.kotlin.test.common)
+                implementation(libs.kotlin.test.annotations.common)
+                api(libs.okio)
+                implementation(libs.kotlinx.serialization.json)
             }
         }
 
         val jvmTest by getting {
             dependencies {
-                implementation(kotlin("test-junit"))
-                implementation("junit:junit:4.13.2")
-                implementation(kotlin("stdlib-jdk8"))
+                implementation(libs.kotlin.test.junit)
+                implementation(libs.junit)
+                implementation(libs.kotlin.stdlib.jdk8)
             }
         }
 
         val jsTest by getting {
             dependencies {
-                implementation(kotlin("test-js"))
-                implementation("com.squareup.okio:okio-nodefilesystem:3.16.1")
-                implementation(npm("@js-joda/timezone", "2.3.0"))
+                implementation(libs.kotlin.test.js)
+                implementation(libs.okio.nodefilesystem)
+                implementation(npm("@js-joda/timezone", libs.versions.jsJodaTimezone.get()))
             }
         }
 
         val wasmJsTest by getting {
             dependencies {
-                implementation(npm("@js-joda/timezone", "2.3.0"))
+                implementation(npm("@js-joda/timezone", libs.versions.jsJodaTimezone.get()))
             }
         }
     }
