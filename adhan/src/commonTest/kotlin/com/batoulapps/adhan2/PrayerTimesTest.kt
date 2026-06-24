@@ -474,6 +474,31 @@ class PrayerTimesTest {
   }
 
   @Test
+  fun testAsrNilWhenSunCannotReachRequiredAltitude() {
+    // At 67N in early January the sun's max altitude stays below the Asr angle
+    val coordinates = Coordinates(67.37800510772394, -67.26246475893095)
+    val date = DateComponents(2026, 1, 5)
+    val params = MUSLIM_WORLD_LEAGUE.parameters
+    assertFailsWith<IllegalStateException> {
+      PrayerTimes(coordinates, date, params)
+    }
+  }
+
+  @Test
+  fun testPrayerTimesOrderedWhenSunBarelyReachesAsrAltitude() {
+    // On Jan 8 the sun just clears the Asr threshold; times should be in order
+    val coordinates = Coordinates(67.37800510772394, -67.26246475893095)
+    val date = DateComponents(2026, 1, 8)
+    val params = MUSLIM_WORLD_LEAGUE.parameters
+    val p = PrayerTimes(coordinates, date, params)
+    assertTrue(p.fajr.epochSeconds < p.sunrise.epochSeconds)
+    assertTrue(p.sunrise.epochSeconds < p.dhuhr.epochSeconds)
+    assertTrue(p.dhuhr.epochSeconds < p.asr.epochSeconds)
+    assertTrue(p.asr.epochSeconds < p.maghrib.epochSeconds)
+    assertTrue(p.maghrib.epochSeconds < p.isha.epochSeconds)
+  }
+
+  @Test
   fun testPrayerTimesProblems_fajr_after_sunrise__and_isha_before_maghrib1() {
     checkPrayersOrder(DateComponents(2025, 12, 1), Coordinates(42.74674252600066, 177.2401196144623))
   }
