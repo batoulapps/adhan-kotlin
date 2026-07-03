@@ -3,6 +3,7 @@ package com.batoulapps.adhan2
 import com.batoulapps.adhan2.CalculationMethod.MUSLIM_WORLD_LEAGUE
 import com.batoulapps.adhan2.data.CalendarUtil
 import com.batoulapps.adhan2.data.DateComponents
+import kotlin.math.abs
 import kotlin.test.Test
 import kotlin.test.assertTrue
 import kotlinx.datetime.DateTimeUnit
@@ -31,7 +32,7 @@ class StressTest {
           continue
         }
 
-        val inPolarCircle = Math.abs(lat) > POLAR_CIRCLE_LATITUDE
+        val inPolarCircle = abs(lat) > POLAR_CIRCLE_LATITUDE
 
         var currentDateTime = CalendarUtil.resolveTime(DateComponents(2025, 1, 1))
         for (i in 0 until 365) {
