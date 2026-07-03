@@ -494,4 +494,27 @@ class PrayerTimesTest {
     assertTrue(prayerTimes.asr.epochSeconds < prayerTimes.maghrib.epochSeconds);
     assertTrue(prayerTimes.maghrib.epochSeconds < prayerTimes.isha.epochSeconds);
   }
+
+  @Test
+  fun testPrayerTimesOrdered_sunBarelyClearsAsrThresholdAt67N() {
+    val coordinates = Coordinates(67.37800510772394, -67.26246475893095)
+    val params = MUSLIM_WORLD_LEAGUE.parameters
+    val date = DateComponents(2026, 1, 8)
+    val p = PrayerTimes(coordinates, date, params)
+    assertTrue(p.fajr.epochSeconds < p.sunrise.epochSeconds)
+    assertTrue(p.sunrise.epochSeconds < p.dhuhr.epochSeconds)
+    assertTrue(p.dhuhr.epochSeconds < p.asr.epochSeconds)
+    assertTrue(p.asr.epochSeconds < p.maghrib.epochSeconds)
+    assertTrue(p.maghrib.epochSeconds < p.isha.epochSeconds)
+  }
+
+  @Test
+  fun testAsrInvalidWhenSunCannotReachRequiredAltitudeAt67N() {
+    val coordinates = Coordinates(67.37800510772394, -67.26246475893095)
+    val params = MUSLIM_WORLD_LEAGUE.parameters
+    val date = DateComponents(2026, 1, 5)
+    assertFailsWith<IllegalStateException> {
+      PrayerTimes(coordinates, date, params)
+    }
+  }
 }
