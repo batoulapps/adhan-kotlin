@@ -124,7 +124,7 @@ data class PrayerTimes(
         )
       }
 
-      if (tempFajr == null || tempFajr.before(safeFajr)) {
+      if (tempFajr == null || tempFajr.before(safeFajr) || !timesInOrder(tempFajr, tempSunrise)) {
         tempFajr = safeFajr
       }
 
@@ -157,10 +157,22 @@ data class PrayerTimes(
           add(sunsetComponents, nightFraction.toInt(), DateTimeUnit.SECOND)
         }
 
-        if (tempIsha == null || tempIsha.after(safeIsha)) {
+        if (tempIsha == null || !timesInOrder(tempMaghrib, tempIsha) || tempIsha.after(safeIsha)) {
           tempIsha = safeIsha
         }
       }
+    }
+
+    // Final ordering guard: if any consecutive pair of valid times is out of order or
+    // closer than 5 minutes, the result is in an invalid state we cannot handle, most
+    // likely due to polar circle issues. Invalidate all times so callers receive a clean
+    // all-or-nothing result.
+    if (!timesInOrder(tempFajr, tempSunrise) ||
+        !timesInOrder(tempSunrise, tempDhuhr) ||
+        !timesInOrder(tempDhuhr, tempAsr) ||
+        !timesInOrder(tempAsr, tempMaghrib) ||
+        !timesInOrder(tempMaghrib, tempIsha)) {
+      throw IllegalStateException()
     }
 
     if (tempFajr == null || tempSunrise == null || tempDhuhr == null || tempAsr == null || tempMaghrib == null || tempIsha == null) {
@@ -266,6 +278,13 @@ data class PrayerTimes(
   }
 
   companion object {
+    internal const val MIN_PRAYER_GAP_MS = 5 * 60 * 1000L
+
+    internal fun timesInOrder(a: LocalDateTime?, b: LocalDateTime?): Boolean {
+      if (a == null || b == null) { return false }
+      return b.toInstant(TimeZone.UTC).toEpochMilliseconds() -
+          a.toInstant(TimeZone.UTC).toEpochMilliseconds() >= MIN_PRAYER_GAP_MS
+    }
     private fun seasonAdjustedMorningTwilight(
       latitude: Double, day: Int, year: Int, sunrise: LocalDateTime
     ): LocalDateTime {
