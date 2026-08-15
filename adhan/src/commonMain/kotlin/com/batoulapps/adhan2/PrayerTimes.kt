@@ -97,7 +97,7 @@ data class PrayerTimes(
         tempFajr = timeComponents.dateComponents(dateComponents)
       }
 
-      // special case for moonsighting committee above latitude 55
+      // special case for moonsighting committee at or above latitude 55
       if (calculationParameters.method === CalculationMethod.MOON_SIGHTING_COMMITTEE &&
         coordinates.latitude >= 55
       ) {
@@ -139,7 +139,7 @@ data class PrayerTimes(
           tempIsha = timeComponents.dateComponents(dateComponents)
         }
 
-        // special case for moonsighting committee above latitude 55
+        // special case for moonsighting committee at or above latitude 55
         if (calculationParameters.method === CalculationMethod.MOON_SIGHTING_COMMITTEE &&
           coordinates.latitude >= 55
         ) {
