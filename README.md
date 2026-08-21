@@ -15,7 +15,7 @@ All primary development is for the Kotlin Multiplatform version. There is also a
 ### Gradle
 
 ```
-implementation("com.batoulapps.adhan:adhan2:0.0.6")
+implementation("com.batoulapps.adhan:adhan2:0.0.7")
 ```
 
 **Note** - on Android, [kotlinx.datetime](https://github.com/Kotlin/kotlinx-datetime) uses `java.time`, which needs either a minimum api level of 26, or enabling of `coreLibraryDesugaring` as per the instructions [here](https://developer.android.com/studio/write/java8-support#library-desugaring).
@@ -63,7 +63,7 @@ val params = CalculationMethod.MUSLIM_WORLD_LEAGUE.parameters
 | `ishaInterval` | Minutes after Maghrib (if set, the time for Isha will be Maghrib plus ishaInterval) |
 | `madhab` | Value from the Madhab object, used to calculate Asr |
 | `highLatitudeRule` | Value from the HighLatitudeRule object, used to set a minimum time for Fajr and a max time for Isha |
-| `adjustments` | JavaScript object with custom prayer time adjustments in minutes for each prayer time |
+| `prayerAdjustments` | Object with custom prayer time adjustments in minutes for each prayer time |
 
 **CalculationMethod**
 
@@ -72,14 +72,14 @@ val params = CalculationMethod.MUSLIM_WORLD_LEAGUE.parameters
 | `MUSLIM_WORLD_LEAGUE` | Muslim World League. Fajr angle: 18, Isha angle: 17 |
 | `EGYPTIAN` | Egyptian General Authority of Survey. Fajr angle: 19.5, Isha angle: 17.5 |
 | `KARACHI` | University of Islamic Sciences, Karachi. Fajr angle: 18, Isha angle: 18 |
-| `UMM_AL_QURA` | Umm al-Qura University, Makkah. Fajr angle: 18, Isha interval: 90. *Note: you should add a +30 minute custom adjustment for Isha during Ramadan.* |
+| `UMM_AL_QURA` | Umm al-Qura University, Makkah. Fajr angle: 18.5, Isha interval: 90. *Note: you should add a +30 minute custom adjustment for Isha during Ramadan.* |
 | `DUBAI` | Method used in UAE. Fajr and Isha angles of 18.2 degrees. |
 | `QATAR` | Modified version of Umm al-Qura used in Qatar. Fajr angle: 18, Isha interval: 90. |
 | `KUWAIT` | Method used by the country of Kuwait. Fajr angle: 18, Isha angle: 17.5 |
-| `MOONSIGHTING_COMMITTEE` | Moonsighting Committee. Fajr angle: 18, Isha angle: 18. Also uses seasonal adjustment values. |
+| `MOON_SIGHTING_COMMITTEE` | Moonsighting Committee. Fajr angle: 18, Isha angle: 18. Also uses seasonal adjustment values. |
 | `SINGAPORE` | Method used by Singapore. Fajr angle: 20, Isha angle: 18. |
 | `NORTH_AMERICA` | Referred to as the ISNA method. This method is included for completeness but is not recommended. Fajr angle: 15, Isha angle: 15 |
-| `KUWAIT` | Kuwait. Fajr angle: 18, Isha angle: 17.5 |
+| `TURKEY` | Method used by Turkey (Diyanet approximation). Fajr angle: 18, Isha angle: 17 |
 | `OTHER` | Fajr angle: 0, Isha angle: 0. This is the default value for `method` when initializing a `CalculationParameters` object. |
 
 **Madhab**
@@ -110,7 +110,7 @@ formatter.format(Date(prayerTimes.fajr.toEpochMilliseconds()))
 
 ### Qibla
 
-As of version 1.1.0, this library provides a `Qibla` class for getting the qibla for a given location.
+This library also provides a `Qibla` class for getting the qibla for a given location.
 
 ```kotlin
 val coordinates = Coordinates(latitude, longitude)
