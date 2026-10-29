@@ -24,15 +24,18 @@ class SunnahTimes(prayerTimes: PrayerTimes) {
     val nightDurationInSeconds =
       (tomorrowPrayerTimes.fajr.toEpochMilliseconds() -
           prayerTimes.maghrib.toEpochMilliseconds()) / 1000
+    val rounding = prayerTimes.calculationParameters.rounding
     middleOfTheNight = roundedMinute(
-      add(prayerTimes.maghrib, (nightDurationInSeconds / 2.0).toInt(), DateTimeUnit.SECOND)
+      add(prayerTimes.maghrib, (nightDurationInSeconds / 2.0).toInt(), DateTimeUnit.SECOND),
+      rounding
     ).toUtcInstant()
     lastThirdOfTheNight = roundedMinute(
       add(
         prayerTimes.maghrib,
         (nightDurationInSeconds * (2.0 / 3.0)).toInt(),
         DateTimeUnit.SECOND
-      )
+      ),
+      rounding
     ).toUtcInstant()
   }
 }
