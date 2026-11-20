@@ -19,7 +19,9 @@ import com.batoulapps.adhan2.data.DateComponents
 import com.batoulapps.adhan2.internal.TestUtils.addSeconds
 import com.batoulapps.adhan2.internal.TestUtils.makeDate
 import com.batoulapps.adhan2.internal.TestUtils.pad
+import com.batoulapps.adhan2.model.Rounding
 import com.batoulapps.adhan2.model.Shafaq
+import kotlin.math.abs
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -149,7 +151,7 @@ class PrayerTimesTest {
     assertEquals("05:48 AM", stringifyAtTimezone(prayerTimes.fajr, zoneId))
     assertEquals("07:16 AM", stringifyAtTimezone(prayerTimes.sunrise, zoneId))
     assertEquals("12:33 PM", stringifyAtTimezone(prayerTimes.dhuhr, zoneId))
-    assertEquals("03:20 PM", stringifyAtTimezone(prayerTimes.asr, zoneId))
+    assertEquals("03:19 PM", stringifyAtTimezone(prayerTimes.asr, zoneId))
     assertEquals("05:43 PM", stringifyAtTimezone(prayerTimes.maghrib, zoneId))
     assertEquals("07:05 PM", stringifyAtTimezone(prayerTimes.isha, zoneId))
   }
@@ -166,7 +168,7 @@ class PrayerTimesTest {
     assertEquals("07:34 AM", stringifyAtTimezone(prayerTimes.fajr, zoneId))
     assertEquals("09:19 AM", stringifyAtTimezone(prayerTimes.sunrise, zoneId))
     assertEquals("12:25 PM", stringifyAtTimezone(prayerTimes.dhuhr, zoneId))
-    assertEquals("01:36 PM", stringifyAtTimezone(prayerTimes.asr, zoneId))
+    assertEquals("01:35 PM", stringifyAtTimezone(prayerTimes.asr, zoneId))
     assertEquals("03:25 PM", stringifyAtTimezone(prayerTimes.maghrib, zoneId))
     assertEquals("05:02 PM", stringifyAtTimezone(prayerTimes.isha, zoneId))
   }
@@ -183,7 +185,7 @@ class PrayerTimesTest {
     assertEquals("04:44 AM", stringifyAtTimezone(prayerTimes.fajr, zoneId))
     assertEquals("06:16 AM", stringifyAtTimezone(prayerTimes.sunrise, zoneId))
     assertEquals("01:09 PM", stringifyAtTimezone(prayerTimes.dhuhr, zoneId))
-    assertEquals("04:53 PM", stringifyAtTimezone(prayerTimes.asr, zoneId)) // original time 4:52pm
+    assertEquals("04:52 PM", stringifyAtTimezone(prayerTimes.asr, zoneId))
     assertEquals("07:52 PM", stringifyAtTimezone(prayerTimes.maghrib, zoneId))
     assertEquals("09:19 PM", stringifyAtTimezone(prayerTimes.isha, zoneId)) // original time 9:18pm
   }
@@ -380,7 +382,7 @@ class PrayerTimesTest {
     assertEquals("06:22 AM", stringifyAtTimezone(fourthPrayerTimes.fajr, zoneId))
     assertEquals("07:55 AM", stringifyAtTimezone(fourthPrayerTimes.sunrise, zoneId))
     assertEquals("01:08 PM", stringifyAtTimezone(fourthPrayerTimes.dhuhr, zoneId))
-    assertEquals("04:26 PM", stringifyAtTimezone(fourthPrayerTimes.asr, zoneId))
+    assertEquals("04:27 PM", stringifyAtTimezone(fourthPrayerTimes.asr, zoneId))
     assertEquals("06:13 PM", stringifyAtTimezone(fourthPrayerTimes.maghrib, zoneId))
     assertEquals("07:35 PM", stringifyAtTimezone(fourthPrayerTimes.isha, zoneId))
   }
@@ -397,7 +399,7 @@ class PrayerTimesTest {
     assertEquals("06:16 AM", stringifyAtTimezone(prayerTimes.fajr, zoneId))
     assertEquals("07:52 AM", stringifyAtTimezone(prayerTimes.sunrise, zoneId))
     assertEquals("12:28 PM", stringifyAtTimezone(prayerTimes.dhuhr, zoneId))
-    assertEquals("02:37 PM", stringifyAtTimezone(prayerTimes.asr, zoneId))
+    assertEquals("02:36 PM", stringifyAtTimezone(prayerTimes.asr, zoneId))
     assertEquals("04:57 PM", stringifyAtTimezone(prayerTimes.maghrib, zoneId))
     assertEquals("06:07 PM", stringifyAtTimezone(prayerTimes.isha, zoneId)) // value from source is 6:08 PM
 
@@ -406,7 +408,7 @@ class PrayerTimesTest {
     assertEquals("05:28 AM", stringifyAtTimezone(secondPrayerTimes.fajr, zoneId))
     assertEquals("07:01 AM", stringifyAtTimezone(secondPrayerTimes.sunrise, zoneId))
     assertEquals("01:28 PM", stringifyAtTimezone(secondPrayerTimes.dhuhr, zoneId))
-    assertEquals("04:59 PM", stringifyAtTimezone(secondPrayerTimes.asr, zoneId))
+    assertEquals("04:58 PM", stringifyAtTimezone(secondPrayerTimes.asr, zoneId))
     assertEquals("07:49 PM", stringifyAtTimezone(secondPrayerTimes.maghrib, zoneId))
     assertEquals("08:45 PM", stringifyAtTimezone(secondPrayerTimes.isha, zoneId))
 
@@ -424,7 +426,7 @@ class PrayerTimesTest {
     assertEquals("06:22 AM", stringifyAtTimezone(fourthPrayerTimes.fajr, zoneId))
     assertEquals("07:55 AM", stringifyAtTimezone(fourthPrayerTimes.sunrise, zoneId))
     assertEquals("01:08 PM", stringifyAtTimezone(fourthPrayerTimes.dhuhr, zoneId))
-    assertEquals("03:45 PM", stringifyAtTimezone(fourthPrayerTimes.asr, zoneId))
+    assertEquals("03:46 PM", stringifyAtTimezone(fourthPrayerTimes.asr, zoneId))
     assertEquals("06:13 PM", stringifyAtTimezone(fourthPrayerTimes.maghrib, zoneId))
     assertEquals("07:15 PM", stringifyAtTimezone(fourthPrayerTimes.isha, zoneId))
   }
@@ -468,7 +470,7 @@ class PrayerTimesTest {
     assertEquals("06:22 AM", stringifyAtTimezone(fourthPrayerTimes.fajr, zoneId))
     assertEquals("07:55 AM", stringifyAtTimezone(fourthPrayerTimes.sunrise, zoneId))
     assertEquals("01:08 PM", stringifyAtTimezone(fourthPrayerTimes.dhuhr, zoneId))
-    assertEquals("04:26 PM", stringifyAtTimezone(fourthPrayerTimes.asr, zoneId))
+    assertEquals("04:27 PM", stringifyAtTimezone(fourthPrayerTimes.asr, zoneId))
     assertEquals("06:13 PM", stringifyAtTimezone(fourthPrayerTimes.maghrib, zoneId))
     assertEquals("07:37 PM", stringifyAtTimezone(fourthPrayerTimes.isha, zoneId))
   }
@@ -499,7 +501,7 @@ class PrayerTimesTest {
   fun testPrayerTimesOrdered_sunBarelyClearsAsrThresholdAt67N() {
     val coordinates = Coordinates(67.37800510772394, -67.26246475893095)
     val params = MUSLIM_WORLD_LEAGUE.parameters
-    val date = DateComponents(2026, 1, 8)
+    val date = DateComponents(2026, 1, 9)
     val p = PrayerTimes(coordinates, date, params)
     assertTrue(p.fajr.epochSeconds < p.sunrise.epochSeconds)
     assertTrue(p.sunrise.epochSeconds < p.dhuhr.epochSeconds)
@@ -515,6 +517,38 @@ class PrayerTimesTest {
     val date = DateComponents(2026, 1, 5)
     assertFailsWith<IllegalStateException> {
       PrayerTimes(coordinates, date, params)
+    }
+  }
+
+  @Test
+  fun testIshaFallsBackToHighLatitudeRuleWhenSunDoesNotReachIshaAngle() {
+    // On this night the Sun does not reach 15° below the horizon (confirmed with
+    // JPL DE440), so Isha is the seventh of the night time. Previously a
+    // spurious 15° time 32 minutes earlier was used instead.
+    val coordinates = Coordinates(61.2181, -149.9003)
+    val params = NORTH_AMERICA.parameters.copy(highLatitudeRule = SEVENTH_OF_THE_NIGHT)
+    val p = PrayerTimes(coordinates, DateComponents(2025, 4, 26), params)
+    assertEquals(Instant.parse("2025-04-27T07:02:00Z"), p.isha)
+  }
+
+  @Test
+  fun testAsrUsesSolarDeclinationAtTransit() {
+    // Reference times are when the Sun's geometric altitude satisfies
+    // cot(a) = shadowLength + tan(|latitude - declination at transit|),
+    // computed with JPL DE440 (Skyfield). In Toronto transit is ~17.5h after
+    // 0h UT, so using the declination at 0h UT shifted Asr by up to ~65s.
+    val coordinates = Coordinates(43.6532, -79.3832)
+    val cases = listOf(
+      // Declination increasing: the 0h UT declination made Asr late
+      Triple(DateComponents(2023, 2, 13), Madhab.SHAFI, "2023-02-13T20:18:55.092Z"),
+      // Declination decreasing: the 0h UT declination made Asr early
+      Triple(DateComponents(2023, 10, 15), Madhab.HANAFI, "2023-10-15T20:49:20.706Z")
+    )
+    for ((date, madhab, reference) in cases) {
+      val params = MUSLIM_WORLD_LEAGUE.parameters.copy(madhab = madhab, rounding = Rounding.NONE)
+      val p = PrayerTimes(coordinates, date, params)
+      val difference = (p.asr - Instant.parse(reference)).inWholeMilliseconds
+      assertTrue(abs(difference) <= 5_000, "Asr on $date was ${difference}ms from the reference")
     }
   }
 }

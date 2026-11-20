@@ -6,6 +6,7 @@ import com.batoulapps.adhan2.internal.Astronomical.altitudeOfCelestialBody
 import com.batoulapps.adhan2.internal.Astronomical.approximateTransit
 import com.batoulapps.adhan2.internal.Astronomical.correctedHourAngle
 import com.batoulapps.adhan2.internal.Astronomical.correctedTransit
+import com.batoulapps.adhan2.internal.Astronomical.interpolate
 import kotlin.math.abs
 import kotlin.math.atan
 import kotlin.math.tan
@@ -62,7 +63,13 @@ class SolarTime(date: DateComponents, coordinates: Coordinates) {
 
   // hours from transit
   fun afternoon(shadowLength: ShadowLength): Double {
-    val tangent: Double = abs(observer.latitude - solar.declination)
+    // The noon shadow is cast when the sun is at transit, so use the
+    // declination interpolated to transit rather than the one at 0h UT.
+    // Transit can be up to a day away from 0h UT depending on longitude.
+    val noonDeclination = interpolate(
+      solar.declination, prevSolar.declination, nextSolar.declination, transit / 24
+    )
+    val tangent: Double = abs(observer.latitude - noonDeclination)
     val inverse: Double =
       shadowLength.shadowLength + tan(tangent.toRadians())
     val angle: Double = atan(1.0 / inverse).toDegrees()
@@ -75,7 +82,7 @@ class SolarTime(date: DateComponents, coordinates: Coordinates) {
       return Double.NaN
     }
 
-    val maxAltitude = altitudeOfCelestialBody(observer.latitude, solar.declination, 0.0)
+    val maxAltitude = altitudeOfCelestialBody(observer.latitude, noonDeclination, 0.0)
 
     // Confirm the sun's maximum altitude on this day actually reaches the computed angle.
     if (maxAltitude < angle) {
