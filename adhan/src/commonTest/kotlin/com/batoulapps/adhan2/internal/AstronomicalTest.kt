@@ -27,6 +27,9 @@ import com.batoulapps.adhan2.internal.DoubleUtil.unwindAngle
 import kotlinx.datetime.DateTimeUnit
 import kotlin.math.abs
 import kotlin.math.roundToInt
+import kotlin.math.roundToLong
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -222,6 +225,37 @@ class AstronomicalTest {
     assertEquals("24:32", timeString(sunset))
     assertEquals("25:02", timeString(twilightEnd))
     assertEquals("", timeString(invalid))
+  }
+
+  @Test
+  fun testHourAngleConvergesNearLowerCulmination() {
+    // Reference times are when the Sun's geometric altitude reaches the angle,
+    // computed with JPL DE440 (Skyfield). On these nights the Sun only just
+    // reaches the angle, where a single correction of the approximate time
+    // left the result about 3 minutes off.
+    data class Case(
+      val coordinates: Coordinates,
+      val date: DateComponents,
+      val angle: Double,
+      val afterTransit: Boolean,
+      val reference: String
+    )
+    val cases = listOf(
+      // Anchorage, Fajr at 18°
+      Case(Coordinates(61.2181, -149.9003), DateComponents(2024, 8, 25), -18.0, false, "2024-08-25T10:33:36.180Z"),
+      // Glasgow, Isha at 18°
+      Case(Coordinates(55.8642, -4.2518), DateComponents(2028, 8, 9), -18.0, true, "2028-08-09T23:35:54.924Z")
+    )
+    for (case in cases) {
+      val solar = SolarTime(case.date, case.coordinates)
+      val hours = solar.timeForSolarAngle(case.angle, case.afterTransit)
+      val midnight = Instant.parse(
+        "${case.date.year}-${TestUtils.pad(case.date.month)}-${TestUtils.pad(case.date.day)}T00:00:00Z"
+      )
+      val time = midnight + (hours * 3_600_000).roundToLong().milliseconds
+      val difference = (time - Instant.parse(case.reference)).inWholeMilliseconds
+      assertTrue(abs(difference) <= 10_000, "${case.date} was ${difference}ms from the reference")
+    }
   }
 
   private fun timeString(whence: Double): String {

@@ -266,35 +266,92 @@ internal object Astronomical {
     m0: Double, h0: Double, coordinates: Coordinates, afterTransit: Boolean,
     Θ0: Double, α2: Double, α1: Double, α3: Double, δ2: Double, δ1: Double, δ3: Double
   ): Double {
-    /* Equation from Astronomical Algorithms page 102 */
-    val Lw = coordinates.longitude * -1
-    val term1 = sin(h0.toRadians()) - sin(coordinates.latitude.toRadians()) * sin(δ2.toRadians())
-    val term2 = cos(coordinates.latitude.toRadians()) * cos(δ2.toRadians())
-    val H0: Double = acos(term1 / term2).toDegrees()
-    var m = if (afterTransit) m0 + H0 / 360 else m0 - H0 / 360
+    val L = coordinates.longitude
+    val φ = coordinates.latitude
 
-    // Astronomical Algorithms page 103 notes that the correction value of Δm
-    // should be ±0.01 and to recalculate with the corrected m value if needed.
-    // Iteration is capped at 10 to account for situations where convergence doesn't occur.
-    for (i in 0 until 10) {
+    /* The altitude of the body at time m (a fraction of the day), with the
+       right ascension and declination interpolated to m.
+       Equations from Astronomical Algorithms page 103 */
+    val Lw = L * -1
+    fun altitudeAt(m: Double): Triple<Double, Double, Double> {
       val θ = unwindAngle(Θ0 + 360.985647 * m)
-      val α = unwindAngle(
-        interpolateAngles( /* value */
-          α2,  /* previousValue */α1,  /* nextValue */α3,  /* factor */m
-        )
-      )
-      val δ = interpolate( /* value */δ2,  /* previousValue */δ1,  /* nextValue */
-        δ3,  /* factor */m
-      )
+      val α = unwindAngle(interpolateAngles(α2, α1, α3, m))
+      val δ = interpolate(δ2, δ1, δ3, m)
       val H = θ - Lw - α
-      val h = altitudeOfCelestialBody( /* observerLatitude */coordinates.latitude,  /* declination */
-        δ,  /* localHourAngle */H
-      )
-      val dmDenominator = 360 * cos(δ.toRadians()) * cos(coordinates.latitude.toRadians()) * sin(H.toRadians())
-      if (dmDenominator == 0.0) { return Double.NaN }
-      val Δm = (h - h0) / dmDenominator
-      m += Δm
-      if (abs(Δm) <= 0.01) { break }
+      val h = altitudeOfCelestialBody(φ, δ, H)
+      return Triple(h, δ, H)
+    }
+
+    /* The altitude is highest at transit and lowest at the lower culmination,
+       and, since the declination changes only slightly over half a day,
+       changes monotonically between them. So the requested altitude is
+       reached once between transit and the adjacent lower culmination if, and
+       only if, it lies between the altitudes at those two instants (see Note 2
+       on page 104). The lower culmination is the transit across the opposite
+       meridian, L + 180°. */
+    val transit = correctedTransit(m0, L, Θ0, α2, α1, α3) / 24
+    val lowerCulmination = correctedTransit(
+      if (afterTransit) transit + 0.5 else transit - 0.5, L + 180, Θ0, α2, α1, α3
+    ) / 24
+    if (!(altitudeAt(transit).first > h0) || !(altitudeAt(lowerCulmination).first < h0)) {
+      return Double.NaN
+    }
+
+    // Bracket [lo, hi] around the solution, with the altitude above h0 on the
+    // transit side and below h0 on the lower culmination side.
+    var lo = minOf(transit, lowerCulmination)
+    var hi = maxOf(transit, lowerCulmination)
+
+    /* Approximate time from equations (15.1) and (15.2) on page 102, using the
+       declination at 0h. If it does not exist or falls outside the bracket,
+       start from the middle of the bracket instead. */
+    val cosH0 = (sin(h0.toRadians()) - sin(φ.toRadians()) * sin(δ2.toRadians())) /
+        (cos(φ.toRadians()) * cos(δ2.toRadians()))
+    val H0 = acos(cosH0).toDegrees()
+    var m = if (afterTransit) m0 + H0 / 360 else m0 - H0 / 360
+    if (!(m > lo && m < hi)) {
+      m = (lo + hi) / 2
+    }
+
+    /* Correct m by Δm = (h - h0) / (360 cos δ cos φ sin H) (page 103),
+       repeating the calculation with the corrected m until the correction is
+       negligible, as in Example 15.a on page 104. Near the transit or the lower
+       culmination sin H approaches zero and this correction can overshoot, so
+       a correction that would leave the bracket, or that is not shrinking fast
+       enough, is replaced by halving the bracket, the binary search of
+       Astronomical Algorithms chapter 5 (page 52). The rule for switching
+       between the two is that of rtsafe in Numerical Recipes, section 9.4.
+       This always converges, to the same solution the textbook iteration
+       converges to when it does. */
+    var Δm = hi - lo
+    var previousΔm = Δm
+    for (i in 0 until 100) {
+      val (h, δ, H) = altitudeAt(m)
+      val f = h - h0
+      if (f == 0.0) {
+        break
+      }
+      if ((f > 0) == afterTransit) {
+        lo = m
+      } else {
+        hi = m
+      }
+      // Rate of change of the altitude, in degrees per day
+      val slope = -360 * cos(δ.toRadians()) * cos(φ.toRadians()) * sin(H.toRadians())
+      val newtonLeavesBracket = ((m - hi) * slope - f) * ((m - lo) * slope - f) >= 0
+      val newtonTooSlow = abs(2 * f) > abs(previousΔm * slope)
+      previousΔm = Δm
+      if (newtonLeavesBracket || newtonTooSlow) {
+        Δm = (hi - lo) / 2
+        m = lo + Δm
+      } else {
+        Δm = -f / slope
+        m += Δm
+      }
+      // About 0.1 milliseconds
+      if (abs(Δm) < 1e-9) {
+        break
+      }
     }
     return m * 24
   }
